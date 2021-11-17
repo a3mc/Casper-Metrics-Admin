@@ -10,32 +10,53 @@ export class AuthService {
 
     public loggedIn = false;
     public errorMessage: string;
+    public user: any;
+    public static access_token;
 
     constructor(
         private _apiClientService: ApiClientService
     ) {
     }
 
+    public async authByToken( token: string ) {
+        this._apiClientService.get(
+            'me',
+        ).pipe( take( 1 ) )
+            .subscribe(
+                result => {
+                    this.loggedIn = true;
+                    this.user = result;
+                },
+                error => {
+                    console.log( error );
+                    this.loggedIn = false;
+                    this.user = null;
+                    this.errorMessage = error?.error?.error?.message || 'Error!';
+                }
+            )
+    }
+
     public auth( user: any ) {
         this._apiClientService.post(
-            'auth',
+            'login',
             user
         ).pipe( take( 1 ) )
             .subscribe(
                 result => {
                     this.loggedIn = true;
-                    console.log( result.token );
+                    this.user = result;
+                    AuthService.access_token = result.token;
+                    if ( user.remember ) {
+                        localStorage.setItem( 'access_token', result.token )
+                    }
 
-                    const helper = new JwtHelperService();
-                    const decodedToken = helper.decodeToken( result.token );
-                    const expirationDate = helper.getTokenExpirationDate( result.token );
-                    const isExpired = helper.isTokenExpired( result.token );
-
-                    console.log( result.token, decodedToken, expirationDate, isExpired )
                 },
                 error => {
                     this.loggedIn = false;
-                    console.error( error )
+                    this.user = null;
+                    localStorage.removeItem( 'access_token' );
+                    console.log( error );
+                    this.errorMessage = error?.error?.error?.message || 'Error!';
                 }
             )
     }

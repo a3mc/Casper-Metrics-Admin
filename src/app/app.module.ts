@@ -22,10 +22,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthComponent } from './auth/auth.component';
 import { JwtModule } from "@auth0/angular-jwt";
-
-export function tokenGetter() {
-    return localStorage.getItem('access_token');
-}
+import { AuthService } from './services/auth.service';
 
 @NgModule( {
     declarations: [
@@ -46,9 +43,13 @@ export function tokenGetter() {
         FormsModule,
         JwtModule.forRoot( {
             config: {
-                tokenGetter: tokenGetter,
-                allowedDomains: ["http://casperadminfronttest.s3-website.eu-central-1.amazonaws.com/"],
-                disallowedRoutes: ["http://example.com/examplebadroute/"],
+                tokenGetter: () => {
+                    return AuthService.access_token || localStorage.getItem("access_token");
+                },
+                //authScheme: "bearer ",
+                allowedDomains: ["3.124.189.139:3002"],
+                //allowedDomains: ["*"],
+                //disallowedRoutes: ["http://example.com/examplebadroute/"],
             } } ),
             NgxMatDatetimePickerModule,
             NgxMatTimepickerModule,
