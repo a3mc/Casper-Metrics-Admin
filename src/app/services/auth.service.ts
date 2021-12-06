@@ -11,7 +11,7 @@ export class AuthService {
     public loggedIn = false;
     public errorMessage: string;
     public user: any;
-    public static access_token;
+    public static access_token = localStorage.getItem( 'access_token' );
 
     constructor(
         private _apiClientService: ApiClientService
