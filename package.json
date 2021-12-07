@@ -1,13 +1,13 @@
 {
     "name": "casper_metrics_admin_panel",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
         "build": "ng build",
-        "build:watch": "ng build --watch",
         "build:prod": "ng build --configuration=production",
-        "build:prod:watch": "ng build --watch --configuration=production",
+        "build:dev": "ng build --configuration=development",
+        "build:watch": "ng build --watch --configuration=development",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"

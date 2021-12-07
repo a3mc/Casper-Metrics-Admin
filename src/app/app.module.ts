@@ -23,6 +23,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthComponent } from './auth/auth.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { AuthService } from './services/auth.service';
+import { InterceptorModule } from './interceptor/interceptor.module';
 
 @NgModule( {
     declarations: [
@@ -40,6 +41,7 @@ import { AuthService } from './services/auth.service';
         CommonModule,
         ClipboardModule,
         HttpClientModule,
+        InterceptorModule,
         FormsModule,
         JwtModule.forRoot( {
             config: {
