@@ -3,6 +3,32 @@
 </div>
 
 <div class="container-lg p-4" *ngIf="authService.loggedIn">
+    <div class="top-menu-container">
+            <a class="top-logo" routerLink="/">
+                Casper Metrics Admin Dashboard
+            </a>
+            <a class="top-menu-link" routerLinkActive="active" routerLink="/signout">
+                <i class="fas fa-sign-out-alt"></i>
+                Sign&nbsp;Out
+            </a>
+
+            <a class="top-menu-link" routerLinkActive="active" routerLink="/profile">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+
+            <a *ngIf="authService.user.role === 'administrator'"
+               class="top-menu-link" routerLinkActive="active" routerLink="/users">
+                <i class="fas fa-users"></i>
+                Users
+            </a>
+
+            <a *ngIf="authService.user.role === 'administrator'"
+               class="top-menu-link" routerLinkActive="active" routerLink="/logs">
+                <i class="fas fa-users"></i>
+                Logs
+            </a>
+    </div>
     <div class="menu-container">
         <ul class="nav nav-tabs">
             <li class="nav-item me-4">
@@ -21,7 +47,7 @@
             <li class="nav-item ms-4">
                 <a class="nav-link" routerLinkActive="active" routerLink="/stake-unlock">
                     <i class="fas fa-lock-open"></i>
-                    Stake Unlock
+                    Stake&nbsp;Unlock
                 </a>
             </li>
         </ul>

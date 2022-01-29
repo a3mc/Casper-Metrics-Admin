@@ -4,23 +4,47 @@ import { OverviewComponent } from "./overview/overview.component";
 import { AppComponent } from "./app.component";
 import { AccountComponent } from "./account/account.component";
 import { StakeUnlockComponent } from "./stake-unlock/stake-unlock.component";
+import { SignoutComponent } from "./signout/signout.component";
+import { ProfileComponent } from './profile/profile.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: OverviewComponent,
-        pathMatch: 'full',
-    },
-    {
-        path: 'account/:address',
-        component: AccountComponent,
-        pathMatch: 'full'
-    },
-    {
-        path: 'stake-unlock',
-        component: StakeUnlockComponent,
-        pathMatch: 'full'
-    },
+        component: AppComponent,
+        children: [
+            {
+                path: '',
+                component: OverviewComponent,
+                pathMatch: 'full',
+            },
+            {
+                path: 'account/:address',
+                component: AccountComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'stake-unlock',
+                component: StakeUnlockComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'signout',
+                component: SignoutComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'profile',
+                component: ProfileComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'users',
+                component: UsersComponent,
+                pathMatch: 'full'
+            }
+        ]
+    }
 ];
 
 @NgModule( {

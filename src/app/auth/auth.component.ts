@@ -19,8 +19,8 @@ export class AuthComponent implements OnInit {
         return this.userForm.get( 'UserPassword' );
     }
 
-    get remember(): AbstractControl {
-        return this.userForm.get( 'Remember' );
+    get faCode(): AbstractControl {
+        return this.userForm.get( 'FaCode' );
     }
 
     constructor(
@@ -35,19 +35,16 @@ export class AuthComponent implements OnInit {
     public init() {
         const token = localStorage.getItem( 'access_token' );
         if ( token ) {
-            this.authService.authByToken(token);
+            this.authService.authByToken( token );
         }
         this._createUserForm();
     }
 
     public signIn(): void {
-        if ( !this.remember.value ) {
-            localStorage.removeItem( 'access_token' );
-        }
         this.authService.auth( {
             email: this.email.value,
             password: this.password.value,
-            remember: this.remember.value
+            faCode: this.faCode.value,
         } )
     }
 
@@ -61,7 +58,10 @@ export class AuthComponent implements OnInit {
                 Validators.required,
                 Validators.minLength( 12 )
             ] ),
-            'Remember': new FormControl( null ),
+            'FaCode': new FormControl( null, [
+                Validators.minLength( 6 ),
+                Validators.maxLength( 6 )
+            ] ),
         } );
     }
 

@@ -24,6 +24,11 @@ import { AuthComponent } from './auth/auth.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { AuthService } from './services/auth.service';
 import { InterceptorModule } from './interceptor/interceptor.module';
+import { SignoutComponent } from './signout/signout.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UsersComponent } from './users/users.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule( {
     declarations: [
@@ -32,7 +37,11 @@ import { InterceptorModule } from './interceptor/interceptor.module';
         StakeUnlockComponent,
         AccountComponent,
         OverviewComponent,
-        AuthComponent
+        AuthComponent,
+        SignoutComponent,
+        ProfileComponent,
+        UserFormComponent,
+        UsersComponent
     ],
     imports: [
         BrowserModule,
@@ -44,28 +53,27 @@ import { InterceptorModule } from './interceptor/interceptor.module';
         InterceptorModule,
         FormsModule,
         JwtModule.forRoot( {
-            config: {
-                tokenGetter: () => {
-                    return AuthService.access_token || localStorage.getItem("access_token");
-                },
-                //authScheme: "bearer ",
-                allowedDomains: ["3.124.189.139:3002"],
-                //allowedDomains: ["*"],
-                //disallowedRoutes: ["http://example.com/examplebadroute/"],
-            } } ),
-            NgxMatDatetimePickerModule,
-            NgxMatTimepickerModule,
-            ReactiveFormsModule,
-            MatDatepickerModule,
-            MatInputModule,
-            NgxMatNativeDateModule,
-            NgxPaginationModule,
-            CommonModule,
-            BrowserModule,
-            ReactiveFormsModule
+                config: {
+                    tokenGetter: () => {
+                        return AuthService.access_token || localStorage.getItem( "access_token" );
+                    },
+                }
+            }
+        ),
+        NgxMatDatetimePickerModule,
+        NgxMatTimepickerModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatInputModule,
+        NgxMatNativeDateModule,
+        NgxPaginationModule,
+        CommonModule,
+        BrowserModule,
+        ReactiveFormsModule,
+        QRCodeModule,
     ],
     providers: [
-        ApiClientService
+        ApiClientService,
     ],
     bootstrap: [AppComponent]
 } )

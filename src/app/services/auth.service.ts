@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiClientService } from './api-client.service';
 import { take } from 'rxjs/operators';
 import { JwtHelperService } from "@auth0/angular-jwt"
+import { Router } from "@angular/router";
 
 @Injectable( {
     providedIn: 'root'
@@ -14,11 +15,12 @@ export class AuthService {
     public static access_token = localStorage.getItem( 'access_token' );
 
     constructor(
-        private _apiClientService: ApiClientService
+        private _apiClientService: ApiClientService,
+        private _router: Router,
     ) {
     }
 
-    public async authByToken( token: string ) {
+    public authByToken( token: string ): void {
         this._apiClientService.get(
             'me',
         ).pipe( take( 1 ) )
@@ -28,15 +30,17 @@ export class AuthService {
                     this.user = result;
                 },
                 error => {
-                    console.log( error );
                     this.loggedIn = false;
                     this.user = null;
-                    this.errorMessage = error?.error?.error?.message || 'Error!';
+                    if ( !error?.error?.error?.message.match( /expired/) ) {
+                        this.errorMessage = error?.error?.error?.message || 'Error!';
+                    }
+                    console.error( error );
                 }
-            )
+            );
     }
 
-    public auth( user: any ) {
+    public auth( user: any ): void {
         this._apiClientService.post(
             'login',
             user
@@ -46,18 +50,24 @@ export class AuthService {
                     this.loggedIn = true;
                     this.user = result;
                     AuthService.access_token = result.token;
-                    if ( user.remember ) {
-                        localStorage.setItem( 'access_token', result.token )
-                    }
-
+                    localStorage.setItem( 'access_token', result.token );
+                    this._router.navigate( ['/'] );
                 },
                 error => {
                     this.loggedIn = false;
                     this.user = null;
                     localStorage.removeItem( 'access_token' );
-                    console.log( error );
+                    console.error( error );
                     this.errorMessage = error?.error?.error?.message || 'Error!';
                 }
-            )
+            );
+    }
+
+    public signOut(): void {
+        this._router.navigate( [''] ).then( () => {
+            localStorage.removeItem( 'access_token' );
+            this.user = null;
+            this.loggedIn = false;
+        } );
     }
 }
