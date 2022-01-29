@@ -1,11 +1,39 @@
-.menu-container {
+.top-menu-container {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
+    height: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 4px;
+    background: #76806e;
+    overflow: hidden;
+    a.top-logo {
+        display: block;
+        float: left;
+        color: #a8f36b !important;
+        text-decoration: none;
+    }
+    a.top-menu-link, a.top-menu-link:visited {
+        float: right;
+        margin-left: 25px;
+        text-decoration: none;
+        color: white;
+        &.active, &:hover {
+            color: #a8f36b;
+        }
+    }
+}
+
+.menu-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 30px;
     height: 62px;
     padding-top: 20px;
-    background: #ccd3c7;
+    background: linear-gradient( 180deg, #ccd3c7, #c2c9be);
     .nav {
         justify-content: center;
     }
@@ -28,6 +56,10 @@
             position: relative;
             top: -1px;
             color: #76806f;
+        }
+        &.users-link {
+            position: relative;
+            top: -41px;
         }
     }
 }

@@ -2,7 +2,7 @@
     <app-tree [data]="data" (selectedNode)="selectNode( $event )" *ngIf="data && data.name"></app-tree>
 </div>
 
-<div class="mt-5 card review p-5" *ngIf="showTable">
+<div class="card review p-5" *ngIf="showTable">
     <button *ngIf="tab !== 'approved'" type="button" class="btn-close"
             aria-label="Close" (click)="cancel()"></button>
     <div class="card-title" *ngIf="tab !== 'approved'">
