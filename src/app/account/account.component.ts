@@ -5,6 +5,7 @@ import { AccountNode, TreeComponent } from '../tree/tree.component';
 import { VAULTS } from "../../vaults";
 import { ActivatedRoute } from "@angular/router";
 import * as moment from 'moment';
+import { AuthService } from '../services/auth.service';
 
 export interface Message {
     type?: string;
@@ -48,6 +49,7 @@ export class AccountComponent implements OnInit {
     private _connectedTransactions;
 
     constructor(
+        public authService: AuthService,
         private _apiClientService: ApiClientService,
         private route: ActivatedRoute,
     ) {

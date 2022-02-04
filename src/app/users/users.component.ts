@@ -43,6 +43,10 @@ export class UsersComponent implements OnInit {
                 result => {
                     // @ts-ignore
                     this.users = result;
+
+                    if ( this.selectedUser ) {
+                        this.setUser( this.users.find( user => user.id === this.selectedUser.id ) );
+                    }
                 }
             );
     }

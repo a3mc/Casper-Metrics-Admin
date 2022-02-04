@@ -1,0 +1,38 @@
+.activate-form {
+	display: block;
+	margin: 0 auto;
+	width: 500px;
+	padding: 40px;
+	border: 1px solid #eee;
+	background: #cfd3cc;
+	border-radius: 20px;
+
+	qrcode {
+		text-align: center;
+	}
+
+	label[for="verifyCode"] {
+		display: block;
+		margin-bottom: 5px;
+	}
+	#verifyCode {
+		width: 120px;
+		display: inline-block;
+	}
+	#verifyCodeButton {
+		display: inline-block;
+	}
+
+	label {
+		color: #666;
+
+		input {
+			font-size: 20px;
+			padding: 6px 12px;
+		}
+	}
+
+	.disabled {
+		opacity: 0.43;
+	}
+}

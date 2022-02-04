@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from "../account/account.component";
 import { ApiClientService } from "../services/api-client.service";
+import { AuthService } from '../services/auth.service';
 
 @Component( {
     selector: 'app-stake-unlock',
@@ -16,6 +17,7 @@ export class StakeUnlockComponent implements OnInit {
     public isSaving = false;
 
     constructor(
+        public authService: AuthService,
         private _apiClientService: ApiClientService
     ) {
     }

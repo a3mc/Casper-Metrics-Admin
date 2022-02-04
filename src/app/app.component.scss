@@ -15,12 +15,12 @@
         color: #a8f36b !important;
         text-decoration: none;
     }
-    a.top-menu-link, a.top-menu-link:visited {
+    .top-menu-link, a.top-menu-link:visited {
         float: right;
         margin-left: 25px;
         text-decoration: none;
         color: white;
-        &.active, &:hover {
+        &.active, &a:hover {
             color: #a8f36b;
         }
     }

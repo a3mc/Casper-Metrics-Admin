@@ -1,5 +1,9 @@
-<div class="container-lg p-4" *ngIf="!authService.loggedIn">
+<div class="container-lg p-4" *ngIf="!authService.isActivating && !authService.loggedIn">
     <app-auth></app-auth>
+</div>
+
+<div class="container-lg p-4" *ngIf="authService.isActivating && !authService.loggedIn">
+    <app-activate></app-activate>
 </div>
 
 <div class="container-lg p-4" *ngIf="authService.loggedIn">
@@ -12,10 +16,12 @@
                 Sign&nbsp;Out
             </a>
 
-            <a class="top-menu-link" routerLinkActive="active" routerLink="/profile">
-                <i class="fas fa-user"></i>
-                Profile
-            </a>
+            <div class="top-menu-link ms-5">
+                <i>
+                    {{ authService?.user?.firstName }}
+                    {{ authService?.user?.lastName }}
+                </i>
+            </div>
 
             <a *ngIf="authService.user.role === 'administrator'"
                class="top-menu-link" routerLinkActive="active" routerLink="/users">
@@ -23,8 +29,7 @@
                 Users
             </a>
 
-            <a *ngIf="authService.user.role === 'administrator'"
-               class="top-menu-link" routerLinkActive="active" routerLink="/logs">
+            <a class="top-menu-link" routerLinkActive="active" routerLink="/logs">
                 <i class="fas fa-users"></i>
                 Logs
             </a>

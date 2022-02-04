@@ -16,7 +16,8 @@
                         {{ locked - unlock365 | number:'1.0-2' }}
                     </th>
                     <th>
-                        <input [(ngModel)]="unlock365" (ngModelChange)="unlock90 = locked - unlock365">
+                        <input [(ngModel)]="unlock365" (ngModelChange)="unlock90 = locked - unlock365"
+                               [disabled]="authService?.user?.role === 'viewer'">
                     </th>
                     <th>0</th>
                 </tr>
@@ -50,7 +51,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="pt-4 right">
+        <div class="pt-4 right" *ngIf="authService?.user?.role !== 'viewer'">
             <div class="alert" *ngIf="message"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"

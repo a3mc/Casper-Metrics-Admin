@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 export class AuthService {
 
     public loggedIn = false;
+    public isActivating = false;
     public errorMessage: string;
     public user: any;
     public static access_token = localStorage.getItem( 'access_token' );
@@ -32,6 +33,8 @@ export class AuthService {
                 error => {
                     this.loggedIn = false;
                     this.user = null;
+                    localStorage.removeItem( 'access_token' );
+                    this._router.navigate( ['/'] );
                     if ( !error?.error?.error?.message.match( /expired/) ) {
                         this.errorMessage = error?.error?.error?.message || 'Error!';
                     }
@@ -47,18 +50,23 @@ export class AuthService {
         ).pipe( take( 1 ) )
             .subscribe(
                 result => {
+                    // Admin init redirect.
+                    if ( result.activate ) {
+                        location.replace( '/?activate=' + result.activate );
+                        return;
+                    }
                     this.loggedIn = true;
                     this.user = result;
                     AuthService.access_token = result.token;
                     localStorage.setItem( 'access_token', result.token );
-                    this._router.navigate( ['/'] );
+
                 },
                 error => {
                     this.loggedIn = false;
                     this.user = null;
                     localStorage.removeItem( 'access_token' );
+                    this.errorMessage = 'Wrong email, password or 2FA code';
                     console.error( error );
-                    this.errorMessage = error?.error?.error?.message || 'Error!';
                 }
             );
     }
