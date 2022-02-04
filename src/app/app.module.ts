@@ -6,11 +6,6 @@ import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { ApiClientService } from './services/api-client.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-    NgxMatDatetimePickerModule,
-    NgxMatNativeDateModule,
-    NgxMatTimepickerModule
-} from '@angular-material-components/datetime-picker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatInputModule } from "@angular/material/input";
@@ -61,12 +56,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
                 }
             }
         ),
-        NgxMatDatetimePickerModule,
-        NgxMatTimepickerModule,
         ReactiveFormsModule,
         MatDatepickerModule,
         MatInputModule,
-        NgxMatNativeDateModule,
         NgxPaginationModule,
         SweetAlert2Module.forRoot(),
         CommonModule,
