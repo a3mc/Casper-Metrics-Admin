@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
-import { ApiClientService } from "./services/api-client.service";
+import { ApiClientService } from './services/api-client.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     NgxMatDatetimePickerModule,
@@ -25,10 +25,11 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { AuthService } from './services/auth.service';
 import { InterceptorModule } from './interceptor/interceptor.module';
 import { SignoutComponent } from './signout/signout.component';
-import { ProfileComponent } from './profile/profile.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UsersComponent } from './users/users.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ActivateComponent } from './activate/activate.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule( {
     declarations: [
@@ -39,9 +40,9 @@ import { QRCodeModule } from 'angularx-qrcode';
         OverviewComponent,
         AuthComponent,
         SignoutComponent,
-        ProfileComponent,
         UserFormComponent,
-        UsersComponent
+        UsersComponent,
+        ActivateComponent
     ],
     imports: [
         BrowserModule,
@@ -67,6 +68,7 @@ import { QRCodeModule } from 'angularx-qrcode';
         MatInputModule,
         NgxMatNativeDateModule,
         NgxPaginationModule,
+        SweetAlert2Module.forRoot(),
         CommonModule,
         BrowserModule,
         ReactiveFormsModule,

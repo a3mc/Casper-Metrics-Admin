@@ -5,8 +5,8 @@ import { AppComponent } from "./app.component";
 import { AccountComponent } from "./account/account.component";
 import { StakeUnlockComponent } from "./stake-unlock/stake-unlock.component";
 import { SignoutComponent } from "./signout/signout.component";
-import { ProfileComponent } from './profile/profile.component';
 import { UsersComponent } from './users/users.component';
+import { ActivateComponent } from './activate/activate.component';
 
 const routes: Routes = [
     {
@@ -31,11 +31,6 @@ const routes: Routes = [
             {
                 path: 'signout',
                 component: SignoutComponent,
-                pathMatch: 'full'
-            },
-            {
-                path: 'profile',
-                component: ProfileComponent,
                 pathMatch: 'full'
             },
             {

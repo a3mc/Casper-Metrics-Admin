@@ -117,7 +117,8 @@
             <thead>
             <tr>
                 <th scope="col" class="checkbox-cell">
-                    <input type="checkbox" [ngModel]="allSelected" (click)="selectAll()">
+                    <input type="checkbox" [ngModel]="allSelected" (click)="selectAll()"
+                        [disabled]="authService?.user?.role === 'viewer'">
                 </th>
                 <th scope="col">Block</th>
                 <th scope="col">Date</th>
@@ -132,7 +133,8 @@
                 paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
                 let i = index">
                 <td class="checkbox-cell">
-                    <input type="checkbox" [(ngModel)]="transfer.selected">
+                    <input type="checkbox" [(ngModel)]="transfer.selected"
+                           [disabled]="authService?.user?.role === 'viewer'">
                 </td>
                 <td>{{ transfer.blockHeight }}</td>
                 <td>{{ transfer.timestamp | date: 'medium' }}</td>
@@ -239,7 +241,7 @@
             </div>
         </div>
 
-        <div class="pt-4 right">
+        <div class="pt-4 right" *ngIf="authService?.user?.role !== 'viewer'">
             <div class="alert" *ngIf="message"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"

@@ -59,6 +59,7 @@ export class AuthComponent implements OnInit {
                 Validators.minLength( 12 )
             ] ),
             'FaCode': new FormControl( null, [
+                Validators.required,
                 Validators.minLength( 6 ),
                 Validators.maxLength( 6 )
             ] ),

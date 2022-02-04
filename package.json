@@ -33,6 +33,7 @@
         "ngx-pagination": "^5.1.1",
         "qrcode": "^1.5.0",
         "rxjs": "~6.6.0",
+        "sweetalert2": "^11.3.10",
         "tslib": "^2.0.0",
         "zone.js": "~0.11.3"
     },
@@ -40,6 +41,7 @@
         "@angular-devkit/build-angular": "~0.1102.6",
         "@angular/cli": "~11.2.6",
         "@angular/compiler-cli": "~11.2.7",
+        "@sweetalert2/ngx-sweetalert2": "^10.0.0",
         "@types/d3": "^7.0.0",
         "@types/jasmine": "~3.6.0",
         "@types/node": "^12.11.1",
