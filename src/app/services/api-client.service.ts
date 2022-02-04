@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders( { 'Content-Type': 'application/json' } )
@@ -8,7 +9,7 @@ const httpOptions = {
 
 @Injectable()
 export class ApiClientService {
-    private _baseUrl = 'http://localhost:3010/';
+    private _baseUrl = environment.apiMainnetUrl;
 
     constructor(
         private _httpClient: HttpClient
