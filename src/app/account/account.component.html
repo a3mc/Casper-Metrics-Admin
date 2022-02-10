@@ -93,6 +93,14 @@
                 </div>
             </div>
             <div *ngIf="tab === 'outbound'">
+                <div class="mb-3">
+                    <label for="all-outbound">
+                        <input type="checkbox" id="all-outbound" name="all-outbound"
+                               [(ngModel)]="allOutbound" />
+                        All outbound transactions from this account are added to the Circulating Supply
+                    </label>
+
+                </div>
                 <div>
                     <span class="from">From:</span>&nbsp;
                 </div>
@@ -118,7 +126,7 @@
             <tr>
                 <th scope="col" class="checkbox-cell">
                     <input type="checkbox" [ngModel]="allSelected" (click)="selectAll()"
-                        [disabled]="authService?.user?.role === 'viewer'">
+                        [disabled]="authService?.user?.role === 'viewer' || ( allOutbound && tab === 'outbound' )">
                 </th>
                 <th scope="col">Block</th>
                 <th scope="col">Date</th>
@@ -134,7 +142,7 @@
                 let i = index">
                 <td class="checkbox-cell">
                     <input type="checkbox" [(ngModel)]="transfer.selected"
-                           [disabled]="authService?.user?.role === 'viewer'">
+                           [disabled]="authService?.user?.role === 'viewer' || ( allOutbound && tab === 'outbound' )">
                 </td>
                 <td>{{ transfer.blockHeight }}</td>
                 <td>{{ transfer.timestamp | date: 'medium' }}</td>
@@ -208,7 +216,10 @@
                 <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
                     Include in Circulating Supply (CSPR):
                 </td>
-                <td class="right">{{ countSelected() | number:'1.0-0' }}</td>
+                <td class="right"*ngIf="( !allOutbound || tab !== 'outbound' )">
+                    {{ countSelected() | number:'1.0-0' }}
+                </td>
+                <td class="right" *ngIf="( allOutbound && tab === 'outbound' )">Auto</td>
             </tr>
             </tfoot>
         </table>
@@ -253,9 +264,9 @@
                 Cancel
             </button>
             <button class="btn btn-lg btn-success"
-                    (click)="save()"
-                    [disabled]="(countSelected() === countApproved()) || isSaving"
-                    [class.btn-disabled]="(countSelected() === countApproved()) || isSaving">
+                    (click)="allOutbound !== null ? saveAllOutbound() : save()"
+                    [disabled]="( allOutbound === null && ( countSelected() === countApproved() ) ) || isSaving"
+                    [class.btn-disabled]="( allOutbound == null && ( countSelected() === countApproved() ) ) || isSaving">
                 Save
             </button>
         </div>

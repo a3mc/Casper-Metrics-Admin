@@ -12,6 +12,8 @@ export class OverviewComponent implements OnInit {
     public circulatingSupply = 0;
     public totalSupply = 0;
     public validatorsWeight = 0;
+    public deployHash: string = null;
+    public showDeployHash = false;
 
     constructor(
         private _apiClientService: ApiClientService,
@@ -26,6 +28,12 @@ export class OverviewComponent implements OnInit {
                 this.totalSupply = result[0].totalSupply;
                 this.validatorsWeight = result[0].validatorsWeights;
             } );
+    }
+
+    public deployHashChanged(): void {
+        console.log( this.deployHash );
+        this.showDeployHash = false;
+        setTimeout( () => this.showDeployHash = true );
     }
 
 }

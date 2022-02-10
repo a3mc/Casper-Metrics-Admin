@@ -14,6 +14,7 @@ export class AuthService {
     public errorMessage: string;
     public user: any;
     public static access_token = localStorage.getItem( 'access_token' );
+    private _authTimer: number;
 
     constructor(
         private _apiClientService: ApiClientService,
@@ -29,6 +30,7 @@ export class AuthService {
                 result => {
                     this.loggedIn = true;
                     this.user = result;
+                    this._recheckAuth();
                 },
                 error => {
                     this.loggedIn = false;
@@ -59,7 +61,7 @@ export class AuthService {
                     this.user = result;
                     AuthService.access_token = result.token;
                     localStorage.setItem( 'access_token', result.token );
-
+                    this._recheckAuth();
                 },
                 error => {
                     this.loggedIn = false;
@@ -77,5 +79,16 @@ export class AuthService {
             this.user = null;
             this.loggedIn = false;
         } );
+    }
+
+    private _recheckAuth(): void {
+        clearTimeout( this._authTimer );
+        if ( AuthService.access_token ) {
+            this._authTimer = setTimeout(
+                () => { this.authByToken( AuthService.access_token ); },
+                60000
+            )
+        }
+
     }
 }
