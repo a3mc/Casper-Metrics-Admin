@@ -11,6 +11,7 @@ export interface AccountNode {
     approved?: boolean;
     partiallyApproved?: boolean;
     children?: Array<AccountNode>;
+    multiple?: boolean;
 }
 
 @Component( {
@@ -31,6 +32,7 @@ export class TreeComponent implements OnInit {
     public root: any;
     public height: number;
     public width: number;
+    public maxChildren = 20;
 
     private _data: AccountNode;
     private tree: any;
@@ -54,6 +56,27 @@ export class TreeComponent implements OnInit {
     public renderTreeChart() {
         if ( !this._data.name ) return;
         this.root = d3.hierarchy( this._data, ( d ) => {
+            if ( d.children?.length > this.maxChildren ) {
+
+                const childrenCount = d.children.length;
+                const childrenSum: number = d.children.reduce(
+                    ( a: number, b: AccountNode ) => ( a + parseInt( String( b.value ) ) )
+                    , 0 );
+
+                d.children = [{
+                    approved: false,
+                    children: [],
+                    from: d.children[0].from,
+                    fromHash: d.children[0].fromHash,
+                    name: ' ' + childrenCount + ' accounts',
+                    multiple: true,
+                    partiallyApproved: false,
+                    to: "",
+                    toHash: "",
+                    value: childrenSum
+                }]
+            }
+
             return d.children;
         } );
 
@@ -97,7 +120,7 @@ export class TreeComponent implements OnInit {
     }
 
     public selectNodes( fromTo ): void {
-        this.svg.selectAll( 'circle' )
+        this.svg.selectAll( 'circle[multi=false]' )
             .style( 'opacity', 0.5 )
             .style( 'fill', ( d ) => {
                 return d.data.approved ? '#38eb5b' : ( d.data.partiallyApproved ? '#c6eb38' : '#fff' );
@@ -123,7 +146,7 @@ export class TreeComponent implements OnInit {
     }
 
     public unselect(): void {
-        this.svg.selectAll( 'circle' )
+        this.svg.selectAll( 'circle[multi=false]' )
             .style( 'fill', ( d ) => {
                 return d.data.approved ? '#38eb5b' : ( d.data.partiallyApproved ? '#c6eb38' : '#fff' );
             } )
@@ -143,7 +166,7 @@ export class TreeComponent implements OnInit {
             .style( 'opacity', 0.5 );
 
         if ( fromTo[0] !== fromTo[1] ) {
-            this.svg.selectAll( 'circle' )
+            this.svg.selectAll( 'circle[multi=false]' )
                 .style( 'opacity', 0.5 );
 
             this.svg.select( 'circle.from' + fromTo[0] + '.to' + fromTo[1] )
@@ -176,16 +199,43 @@ export class TreeComponent implements OnInit {
                 return 'translate(' + source.x0 + ',' + source.y0 + ')';
             } )
             .on( 'click', ( event, d ) => {
-                this._click( event, d );
+                if ( !d.data.multiple ) {
+                    this._click( event, d );
+                }
             } );
 
         nodeEnter.append( 'circle' )
             .attr( 'class', ( d ) => {
-                return 'to' + d.data.toHash + ' from' + d.data.fromHash
+                return (
+                    'to' + d.data.toHash + ' from' + d.data.fromHash
+                );
+            } )
+            .attr( 'multi', ( d ) => {
+                return (
+                    !! d.data.multiple
+                );
             } )
             .attr( 'r', 0.0000010 )
             .style( 'fill', ( d ) => {
                 return d._children ? 'lightsteelblue' : '#fff';
+            } );
+
+        nodeEnter.append( 'circle' )
+            .attr( 'transform', ( d ) => {
+                return 'translate(3,-3)';
+            } )
+            .attr( 'r', 10 )
+            .style( 'stroke', ( d ) => {
+                return 'steelblue';
+            } )
+            .style( 'opacity', ( d ) => {
+                return d.data.multiple ? 1 : 0;
+            } )
+            .style( 'stroke-width', ( d ) => {
+                return '2px';
+            } )
+            .style( 'fill', ( d ) => {
+                return '#fff';
             } );
 
         nodeEnter.append( 'text' )

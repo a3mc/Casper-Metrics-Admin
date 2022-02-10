@@ -18,4 +18,18 @@
         <h3 class="approved-header">Approved Unlock Transactions</h3>
         <app-account></app-account>
     </div>
+    <div class="mt-5">
+        <h3 class="approved-header">Search TX by Deploy Hash</h3>
+        <div class="form-group mt-5">
+            <label for="deploy-hash" class="d-block">
+                Deploy Hash
+            </label>
+            <input class="form-control" [(ngModel)]="deployHash" name="deployHash" id="deploy-hash"
+                   (ngModelChange)="deployHashChanged()" />
+        </div>
+
+        <div style="min-height: 300px">
+            <app-account [deployHash]="deployHash" *ngIf="deployHash && showDeployHash"></app-account>
+        </div>
+    </div>
 </div>

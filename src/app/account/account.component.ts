@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 import { ApiClientService } from '../services/api-client.service';
 import { AccountNode, TreeComponent } from '../tree/tree.component';
 import { VAULTS } from "../../vaults";
 import { ActivatedRoute } from "@angular/router";
 import * as moment from 'moment';
 import { AuthService } from '../services/auth.service';
+import { from } from "rxjs";
 
 export interface Message {
     type?: string;
@@ -24,6 +25,7 @@ export interface TransfersResponse {
     styleUrls: ['./account.component.scss']
 } )
 export class AccountComponent implements OnInit {
+    @Input( 'deployHash' ) deployHash?: string;
     @ViewChild( TreeComponent ) tree;
     public vaults: AccountNode[] = Object.assign( [], VAULTS );
     public account: AccountNode;
@@ -45,6 +47,7 @@ export class AccountComponent implements OnInit {
     public perPage = 50;
     public totalApproved = 0;
     public allTransferSum = 0;
+    public allOutbound: boolean = null;
 
     private _connectedTransactions;
 
@@ -70,7 +73,11 @@ export class AccountComponent implements OnInit {
                 }
             } );
             if( !params.keys.length ) {
-                this.approvedTransfers();
+                if ( this.deployHash && this.deployHash.length ) {
+                    this.searchDeployHash();
+                } else {
+                    this.approvedTransfers();
+                }
             }
         } );
     }
@@ -134,6 +141,21 @@ export class AccountComponent implements OnInit {
 
     }
 
+    public searchDeployHash() {
+        this._apiClientService.get(
+            'transfers?deployHash=' + this.deployHash
+        )
+            .pipe( take( 1 ) )
+            .subscribe( ( result: any ) => {
+                this.totalItems = result.totalItems.count;
+                this.totalApproved = result.approvedSum;
+                this.allTransfers = result.data;
+                this.allTransferSum = result.totalSum;
+                this.editTransfers( this.allTransfers, 'approved' )
+            } );
+
+    }
+
     public selectNode( nodePair ): void {
         if ( !nodePair[0] || !nodePair[1] ) return;
         this.totalItems = 0;
@@ -160,38 +182,6 @@ export class AccountComponent implements OnInit {
 
     public selectNodes( fromTo ): void {
         this.tree.selectNodes( fromTo );
-    }
-
-    private _getChildren( children ) {
-
-        return children.reduce(
-            ( a, b ) => {
-                let sum = children.filter( i => i.toHash === b.toHash )
-                    .reduce(
-                        ( a2, b2 ) => a2 + Math.round( ( Number( b2.amount ) ) / 1000000000 ),
-                        0
-                    );
-
-                const partiallyApproved = children.filter( i => i.toHash === b.toHash ).some( i => i.approved );
-                const approved = children.filter( i => i.toHash === b.toHash ).every( i => i.approved );
-
-                if ( !a.some( i => i.toHash === b.toHash ) ) {
-
-                    a.push( {
-                        name: b.name,
-                        value: sum,
-                        from: b.from,
-                        fromHash: b.fromHash,
-                        to: b.to,
-                        toHash: b.toHash,
-                        approved: !!approved,
-                        partiallyApproved: !approved && !!partiallyApproved,
-                    } );
-                }
-                return a;
-            },
-            []
-        ).filter( child => child.value > this.smallAmount );
     }
 
     public setFromPrevious(): void {
@@ -231,6 +221,7 @@ export class AccountComponent implements OnInit {
                 this.totalItems = result.totalItems.count;
                 this.totalApproved = result.approvedSum;
                 this.allTransferSum = result.totalSum;
+                this.allOutbound = result.allOutbound;
                 this.editTransfers( result.data, 'outbound' );
             } );
     }
@@ -322,6 +313,7 @@ export class AccountComponent implements OnInit {
         ).join( ',' );
         this._apiClientService.post( 'transfers/approve?approvedIds=' + approved +
             '&declinedIds=' + declined, {} )
+            .pipe( take ( 1 ) )
             .subscribe(
                 ( result ) => {
                     this.message = {
@@ -337,7 +329,37 @@ export class AccountComponent implements OnInit {
                 ( error ) => {
                     this.message = {
                         type: 'error',
-                        text: 'Error updating unlock records.',
+                        text: 'Error updating records.',
+                    }
+                    this.isSaving = false;
+                    console.error( error );
+                } );
+    }
+
+    public saveAllOutbound(): void {
+        this.isSaving = true;
+        this._apiClientService.post( 'transfers/approve?' +
+            'allOutboundHash=' + this.account.toHash +
+            '&allOutbound=' + this.allOutbound,
+            {}
+        )
+            .pipe( take ( 1 ) )
+            .subscribe(
+                ( result ) => {
+                    this.message = {
+                        type: 'success',
+                        text: 'Saved successfully.',
+                    }
+                    this.isSaving = false;
+                    this.transfers.forEach( transfer => {
+                        transfer.approved = true;
+                    } );
+                    this.showTree();
+                },
+                ( error ) => {
+                    this.message = {
+                        type: 'error',
+                        text: 'Error updating records.',
                     }
                     this.isSaving = false;
                     console.error( error );
@@ -348,6 +370,38 @@ export class AccountComponent implements OnInit {
         this.transfers = [];
         this.showTable = false;
         this.unselectNode();
+    }
+
+    private _getChildren( children ) {
+
+        return children.reduce(
+            ( a, b ) => {
+                let sum = children.filter( i => i.toHash === b.toHash )
+                    .reduce(
+                        ( a2, b2 ) => a2 + Math.round( ( Number( b2.amount ) ) / 1000000000 ),
+                        0
+                    );
+
+                const partiallyApproved = children.filter( i => i.toHash === b.toHash ).some( i => i.approved );
+                const approved = children.filter( i => i.toHash === b.toHash ).every( i => i.approved );
+
+                if ( !a.some( i => i.toHash === b.toHash ) ) {
+
+                    a.push( {
+                        name: b.name,
+                        value: sum,
+                        from: b.from,
+                        fromHash: b.fromHash,
+                        to: b.to,
+                        toHash: b.toHash,
+                        approved: !!approved,
+                        partiallyApproved: !approved && !!partiallyApproved,
+                    } );
+                }
+                return a;
+            },
+            []
+        ).filter( child => child.value > this.smallAmount );
     }
 
     private _compare( a, b ) {
