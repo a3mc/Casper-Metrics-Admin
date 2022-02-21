@@ -33,12 +33,17 @@ export class AuthService {
                     this._recheckAuth();
                 },
                 error => {
-                    this.loggedIn = false;
-                    this.user = null;
-                    localStorage.removeItem( 'access_token' );
-                    this._router.navigate( ['/'] );
-                    if ( !error?.error?.error?.message.match( /expired/) ) {
-                        this.errorMessage = error?.error?.error?.message || 'Error!';
+                    if (
+                        error.status &&
+                        error.status >= 400 && error.status < 500
+                    ) {
+                        this.loggedIn = false;
+                        this.user = null;
+                        localStorage.removeItem( 'access_token' );
+                        this._router.navigate( ['/'] );
+                        if ( !error?.error?.error?.message.match( /expired/ ) ) {
+                            this.errorMessage = error?.error?.error?.message || 'Error!';
+                        }
                     }
                     console.error( error );
                 }
