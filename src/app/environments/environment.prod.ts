@@ -1,5 +1,4 @@
 export const environment = {
     production: true,
-    apiMainnetUrl: 'https://mainnet.cspr.art3mis.net/',
-    apiTestnetUrl: 'https://testnet.cspr.art3mis.net/',
+    apiMainnetUrl: 'https://admin.cspr.art3mis.net/',
 };
