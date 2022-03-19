@@ -1,35 +1,25 @@
 <div class="overview">
     <div class="metrics">
         <div class="pt-3">
-            Circulating Supply: {{ circulatingSupply | number:'1.0-2' }}
-            <div class="text-muted">
-                <i>Circulating Supply = Unlocked Funds + Unlocked Validators + Rewards of Unlocked Validators</i>
-            </div>
-
-        </div>
-        <div class="pt-3">
-            Total Supply: {{ totalSupply | number:'1.0-2' }}
-        </div>
-        <div class="pt-3">
-            Validators Weight: {{ validatorsWeight | number:'1.0-2' }}
+            Current Circulating Supply: <b>{{ circulatingSupply | number:'1.0-2' }}</b>
         </div>
     </div>
     <div class="mt-5">
-        <h3 class="approved-header">Approved Unlock Transactions</h3>
-        <app-account></app-account>
+        <h3 class="approved-header">Approve Unlock Transactions</h3>
+        <app-account [overview]="true"></app-account>
     </div>
     <div class="mt-5">
-        <h3 class="approved-header">Search TX by Deploy Hash</h3>
+        <h3 class="approved-header">Search TXs by Deploy hashes or Account addresses</h3>
         <div class="form-group mt-5">
             <label for="deploy-hash" class="d-block">
-                Deploy Hash
+                Search:
             </label>
-            <input class="form-control" [(ngModel)]="deployHash" name="deployHash" id="deploy-hash"
-                   (ngModelChange)="deployHashChanged()" />
+            <input class="form-control" [(ngModel)]="searchTerm" name="searchTerm" id="search-term"
+                   (ngModelChange)="searchChanged()" />
         </div>
 
         <div style="min-height: 300px">
-            <app-account [deployHash]="deployHash" *ngIf="deployHash && showDeployHash"></app-account>
+            <app-account [searchTerm]="searchTerm" *ngIf="searchTerm && showSearchTerm"></app-account>
         </div>
     </div>
 </div>

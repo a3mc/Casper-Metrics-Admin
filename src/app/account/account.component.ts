@@ -25,7 +25,9 @@ export interface TransfersResponse {
     styleUrls: ['./account.component.scss']
 } )
 export class AccountComponent implements OnInit {
-    @Input( 'deployHash' ) deployHash?: string;
+    @Input( 'searchTerm' ) search?: string;
+    @Input( 'overview' ) overview?: boolean;
+
     @ViewChild( TreeComponent ) tree;
     public vaults: AccountNode[] = Object.assign( [], VAULTS );
     public account: AccountNode;
@@ -47,7 +49,6 @@ export class AccountComponent implements OnInit {
     public perPage = 50;
     public totalApproved = 0;
     public allTransferSum = 0;
-    public allOutbound: boolean = null;
 
     private _connectedTransactions;
 
@@ -73,8 +74,8 @@ export class AccountComponent implements OnInit {
                 }
             } );
             if( !params.keys.length ) {
-                if ( this.deployHash && this.deployHash.length ) {
-                    this.searchDeployHash();
+                if ( this.search && this.search.length ) {
+                    this.searchTerm();
                 } else {
                     this.approvedTransfers();
                 }
@@ -141,9 +142,9 @@ export class AccountComponent implements OnInit {
 
     }
 
-    public searchDeployHash() {
+    public searchTerm() {
         this._apiClientService.get(
-            'transfers?deployHash=' + this.deployHash
+            'transfers?search=' + this.search
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -221,7 +222,6 @@ export class AccountComponent implements OnInit {
                 this.totalItems = result.totalItems.count;
                 this.totalApproved = result.approvedSum;
                 this.allTransferSum = result.totalSum;
-                this.allOutbound = result.allOutbound;
                 this.editTransfers( result.data, 'outbound' );
             } );
     }
@@ -239,6 +239,7 @@ export class AccountComponent implements OnInit {
     }
 
     public selectAll(): void {
+        this.message = null;
         if ( !this.transfers.every( transfer => transfer.selected ) ) {
             this.transfers.forEach( transfer => {
                 transfer.selected = true;
@@ -323,36 +324,6 @@ export class AccountComponent implements OnInit {
                     this.isSaving = false;
                     this.transfers.forEach( transfer => {
                         transfer.approved = transfer.selected;
-                    } );
-                    this.showTree();
-                },
-                ( error ) => {
-                    this.message = {
-                        type: 'error',
-                        text: 'Error updating records.',
-                    }
-                    this.isSaving = false;
-                    console.error( error );
-                } );
-    }
-
-    public saveAllOutbound(): void {
-        this.isSaving = true;
-        this._apiClientService.post( 'transfers/approve?' +
-            'allOutboundHash=' + this.account.toHash +
-            '&allOutbound=' + this.allOutbound,
-            {}
-        )
-            .pipe( take ( 1 ) )
-            .subscribe(
-                ( result ) => {
-                    this.message = {
-                        type: 'success',
-                        text: 'Saved successfully.',
-                    }
-                    this.isSaving = false;
-                    this.transfers.forEach( transfer => {
-                        transfer.approved = true;
                     } );
                     this.showTree();
                 },

@@ -93,14 +93,6 @@
                 </div>
             </div>
             <div *ngIf="tab === 'outbound'">
-                <div class="mb-3">
-                    <label for="all-outbound">
-                        <input type="checkbox" id="all-outbound" name="all-outbound"
-                               [(ngModel)]="allOutbound" />
-                        All outbound transactions from this account are added to the Circulating Supply
-                    </label>
-
-                </div>
                 <div>
                     <span class="from">From:</span>&nbsp;
                 </div>
@@ -126,7 +118,7 @@
             <tr>
                 <th scope="col" class="checkbox-cell">
                     <input type="checkbox" [ngModel]="allSelected" (click)="selectAll()"
-                        [disabled]="authService?.user?.role === 'viewer' || ( allOutbound && tab === 'outbound' )">
+                        [disabled]="authService?.user?.role === 'viewer'" [hidden]="overview">
                 </th>
                 <th scope="col">Block</th>
                 <th scope="col">Date</th>
@@ -141,8 +133,9 @@
                 paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
                 let i = index">
                 <td class="checkbox-cell">
-                    <input type="checkbox" [(ngModel)]="transfer.selected"
-                           [disabled]="authService?.user?.role === 'viewer' || ( allOutbound && tab === 'outbound' )">
+                    <input type="checkbox" [(ngModel)]="transfer.selected" (click)="message = null"
+                           [disabled]="authService?.user?.role === 'viewer'"
+                           [hidden]="overview">
                 </td>
                 <td>{{ transfer.blockHeight }}</td>
                 <td>{{ transfer.timestamp | date: 'medium' }}</td>
@@ -190,13 +183,6 @@
                 </td>
                 <td class="right">{{ transfersSum | number:'1.0-0' }}</td>
             </tr>
-            <tr>
-
-                <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
-                    Include in Circulating Supply (CSPR):
-                </td>
-                <td class="right">{{ countSelected() | number:'1.0-0' }}</td>
-            </tr>
             </tbody>
             <tfoot class="total">
             <tr *ngIf="totalItems > perPage && tab !== 'previous'">
@@ -216,10 +202,9 @@
                 <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
                     Include in Circulating Supply (CSPR):
                 </td>
-                <td class="right"*ngIf="( !allOutbound || tab !== 'outbound' )">
+                <td class="right">
                     {{ countSelected() | number:'1.0-0' }}
                 </td>
-                <td class="right" *ngIf="( allOutbound && tab === 'outbound' )">Auto</td>
             </tr>
             </tfoot>
         </table>
@@ -260,13 +245,14 @@
                  [class.alert-danger]="message.type === 'error'">
                 {{ message.text }}
             </div>
-            <button class="btn btn-lg btn-warning me-3" (click)="cancel()" *ngIf="tab !== 'approved'">
+            <button class="btn btn-lg btn-warning me-3" (click)="cancel()"
+                    [disabled]="isSaving" [class.btn-disabled]="isSaving" *ngIf="tab !== 'approved'">
                 Cancel
             </button>
             <button class="btn btn-lg btn-success"
-                    (click)="allOutbound !== null ? saveAllOutbound() : save()"
-                    [disabled]="( allOutbound === null && ( countSelected() === countApproved() ) ) || isSaving"
-                    [class.btn-disabled]="( allOutbound == null && ( countSelected() === countApproved() ) ) || isSaving">
+                    (click)="save()"
+                    [disabled]="( countSelected() === countApproved() ) || isSaving"
+                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving">
                 Save
             </button>
         </div>
