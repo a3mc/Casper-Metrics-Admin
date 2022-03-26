@@ -14,7 +14,7 @@ export class StakeUnlockComponent implements OnInit {
     public unlock90 = 0;
     public unlock365 = 0;
     public message: Message;
-    public isSaving = false;
+    public isCalculating = false;
 
     constructor(
         public authService: AuthService,
@@ -33,22 +33,15 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public save(): void {
-        this.isSaving = true;
+        this.isCalculating = true;
         this._apiClientService.post( 'validators-unlock?amount=' + this.unlock365, null )
             .subscribe(
-                () => {
-                    this.message = {
-                        type: 'success',
-                        text: 'Updated successfully.'
-                    }
-                    this.isSaving = false;
-                },
+                () => {},
                 ( error ) => {
                     this.message = {
                         type: 'error',
-                        text: 'Error updating genesis stake.'
+                        text: 'Error updating unlocked validators schedule.'
                     }
-                    this.isSaving = false;
                     console.log( error );
                 }
             );

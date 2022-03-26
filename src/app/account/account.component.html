@@ -191,7 +191,7 @@
                 </th>
                 <td></td>
             </tr>
-            <tr>
+            <tr *ngIf="tab !== 'approved' || search">
                 <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
                     Total (CSPR):
                 </td>
@@ -245,16 +245,40 @@
                  [class.alert-danger]="message.type === 'error'">
                 {{ message.text }}
             </div>
+            <div class="alert alert-warning" *ngIf="authService.status && (tab !== 'approved' || search)">
+                Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
+            </div>
             <button class="btn btn-lg btn-warning me-3" (click)="cancel()"
                     [disabled]="isSaving" [class.btn-disabled]="isSaving" *ngIf="tab !== 'approved'">
                 Cancel
             </button>
-            <button class="btn btn-lg btn-success"
+            <button class="btn btn-lg btn-success" *ngIf="tab !== 'approved' || search"
                     (click)="save()"
-                    [disabled]="( countSelected() === countApproved() ) || isSaving"
-                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving">
+                    [disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
+                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving || authService.status">
                 Save
             </button>
+
+            <button class="btn btn-lg btn-success" *ngIf="tab === 'approved' && !search"
+                    style="width:200px;"
+                    (click)="calculate()"
+                    [disabled]="authService.status"
+                    [class.btn-disabled]="authService.status">
+                <i *ngIf="authService.status" class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+
+                <span *ngIf="!authService.status">Approve&nbsp;All</span>
+                <span *ngIf="authService.status">Deploying&hellip;</span>
+            </button>
+            <div *ngIf="tab === 'approved' && !search" class="mt-2 text-muted">
+                <small>
+                    This will trigger the update in database and will take a few minutes to finish.<br>
+                    After that, circulating supply will be updated on the API endpoints.<br>
+                    <span *ngIf="totalItems > perPage">
+                        Please note, it affects all pages, not just the current one.
+                    </span>
+                </small>
+            </div>
+
         </div>
     </div>
 </div>

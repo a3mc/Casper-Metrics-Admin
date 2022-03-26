@@ -59,12 +59,19 @@
                  [class.alert-danger]="message.type === 'error'">
                 {{ message.text }}
             </div>
-            <button class="btn btn-lg btn-success"
-                    [class.btn-disabled]="isSaving"
-                    [disabled]="isSaving"
+            <button class="btn btn-lg btn-success" style="width: 240px"
+                    [class.btn-disabled]="isCalculating"
+                    [disabled]="isCalculating"
                     (click)="save()">
-                Save
+                <i *ngIf="isCalculating" class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                Save &amp; Approve
             </button>
+            <div class="mt-2 text-muted">
+                <small>
+                    This will trigger the update in database and will take a few minutes to finish.<br>
+                    After that, circulating supply will be updated on the API endpoints.
+                </small>
+            </div>
         </div>
     </div>
 </div>

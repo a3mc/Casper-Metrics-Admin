@@ -1,12 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { distinctUntilChanged, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ApiClientService } from '../services/api-client.service';
 import { AccountNode, TreeComponent } from '../tree/tree.component';
 import { VAULTS } from "../../vaults";
 import { ActivatedRoute } from "@angular/router";
 import * as moment from 'moment';
 import { AuthService } from '../services/auth.service';
-import { from } from "rxjs";
 
 export interface Message {
     type?: string;
@@ -46,7 +45,7 @@ export class AccountComponent implements OnInit {
     public showTable = false;
     public page = 1;
     public totalItems = 0;
-    public perPage = 50;
+    public perPage = 15;
     public totalApproved = 0;
     public allTransferSum = 0;
 
@@ -60,7 +59,7 @@ export class AccountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.page = 0;
+        this.page = 1;
         this.totalApproved = 0;
         this.totalItems = 0;
         this.route.paramMap.subscribe( ( params ) => {
@@ -73,7 +72,7 @@ export class AccountComponent implements OnInit {
                     this.showTree();
                 }
             } );
-            if( !params.keys.length ) {
+            if ( !params.keys.length ) {
                 if ( this.search && this.search.length ) {
                     this.searchTerm();
                 } else {
@@ -142,6 +141,18 @@ export class AccountComponent implements OnInit {
 
     }
 
+    public calculate(): void {
+        this.authService.status = true;
+        this._apiClientService.post( 'transfers/calculate', null )
+            .pipe( take( 1 ) )
+            .subscribe(
+                () => {},
+                ( error: any ) => {
+                    console.error( error );
+                }
+            );
+    }
+
     public searchTerm() {
         this._apiClientService.get(
             'transfers?search=' + this.search
@@ -161,7 +172,7 @@ export class AccountComponent implements OnInit {
         if ( !nodePair[0] || !nodePair[1] ) return;
         this.totalItems = 0;
         this.totalApproved = 0;
-        this.page = 0;
+        this.page = 1;
         if ( nodePair[0] === nodePair[1] ) {
             const vault = this.vaults.find( vault => vault.fromHash === nodePair[0] );
             this.setInbound( vault );
@@ -235,7 +246,7 @@ export class AccountComponent implements OnInit {
     public countApproved(): number {
         return ( this.tab !== 'previous' ? this.totalApproved : 0 )
             + this.transfers.filter( transfer => transfer.approved )
-            .reduce( ( a, b ) => a + b.amount / 1000000000, 0 );
+                .reduce( ( a, b ) => a + b.amount / 1000000000, 0 );
     }
 
     public selectAll(): void {
@@ -314,7 +325,7 @@ export class AccountComponent implements OnInit {
         ).join( ',' );
         this._apiClientService.post( 'transfers/approve?approvedIds=' + approved +
             '&declinedIds=' + declined, {} )
-            .pipe( take ( 1 ) )
+            .pipe( take( 1 ) )
             .subscribe(
                 ( result ) => {
                     this.message = {
@@ -325,7 +336,9 @@ export class AccountComponent implements OnInit {
                     this.transfers.forEach( transfer => {
                         transfer.approved = transfer.selected;
                     } );
-                    this.showTree();
+                    if ( this.tab !== 'approved' ) {
+                        this.showTree();
+                    }
                 },
                 ( error ) => {
                     this.message = {
