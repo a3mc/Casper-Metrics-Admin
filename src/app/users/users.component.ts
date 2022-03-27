@@ -25,12 +25,16 @@ export class UsersComponent implements OnInit {
 
     public addNewUser(): void {
         this.selectedUser = null;
-        setTimeout( () => { this.selectedUser = { active: true, role: 'editor' }; } );
+        setTimeout( () => {
+            this.selectedUser = { active: true, role: 'editor' };
+        } );
     }
 
     public setUser( user: any ): void {
         this.selectedUser = null;
-        setTimeout( () => { this.selectedUser = user; } );
+        setTimeout( () => {
+            this.selectedUser = user;
+        } );
     }
 
     public userUpdated(): void {

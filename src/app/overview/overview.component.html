@@ -15,15 +15,15 @@
     <div class="mt-5">
         <h3 class="mb-2 mt-5 pt-5">Search TXs by Deploy hashes or Account addresses</h3>
         <div class="form-group mt-3">
-            <label for="deploy-hash" class="d-block">
+            <label class="d-block" for="deploy-hash">
                 Search:
             </label>
-            <input class="form-control" [(ngModel)]="searchTerm" name="searchTerm" id="search-term"
-                   (ngModelChange)="searchChanged()" />
+            <input (ngModelChange)="searchChanged()" [(ngModel)]="searchTerm" class="form-control" id="search-term"
+                   name="searchTerm"/>
         </div>
 
         <div style="min-height: 300px">
-            <app-account [searchTerm]="searchTerm" *ngIf="searchTerm && showSearchTerm"></app-account>
+            <app-account *ngIf="searchTerm && showSearchTerm" [searchTerm]="searchTerm"></app-account>
         </div>
     </div>
 </div>

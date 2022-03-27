@@ -1,11 +1,11 @@
-<div class="tree-container" *ngIf="data && data.name">
-    <app-tree [data]="data" (selectedNode)="selectNode( $event )" *ngIf="data && data.name"></app-tree>
+<div *ngIf="data && data.name" class="tree-container">
+    <app-tree (selectedNode)="selectNode( $event )" *ngIf="data && data.name" [data]="data"></app-tree>
 </div>
 
-<div class="card review p-5" *ngIf="showTable">
-    <button *ngIf="tab !== 'approved'" type="button" class="btn-close"
-            aria-label="Close" (click)="cancel()"></button>
-    <div class="card-title" *ngIf="tab !== 'approved'">
+<div *ngIf="showTable" class="card review p-5">
+    <button (click)="cancel()" *ngIf="tab !== 'approved'" aria-label="Close"
+            class="btn-close" type="button"></button>
+    <div *ngIf="tab !== 'approved'" class="card-title">
         <h3 class="mb-4">
             Review Transactions
             ({{
@@ -17,8 +17,8 @@
             }})
         </h3>
         <ul class="nav nav-tabs">
-            <li class="nav-item" *ngIf="!this.isGenesisAccount">
-                <a class="nav-link" (click)="page = 1;setFromPrevious()" [class.active]="tab === 'previous'">
+            <li *ngIf="!this.isGenesisAccount" class="nav-item">
+                <a (click)="page = 1;setFromPrevious()" [class.active]="tab === 'previous'" class="nav-link">
                     From {{
                     account.name ||
                     account.from ? account.from?.substr(0, 4) + '&hellip;' +
@@ -29,33 +29,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link to" (click)="page = 1; setInbound()" [class.active]="tab === 'inbound'">
+                <a (click)="page = 1; setInbound()" [class.active]="tab === 'inbound'" class="nav-link to">
                     All Inbound
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link from" (click)="page = 1; setOutbound()" [class.active]="tab === 'outbound'">
+                <a (click)="page = 1; setOutbound()" [class.active]="tab === 'outbound'" class="nav-link from">
                     All Outbound
                 </a>
             </li>
         </ul>
     </div>
     <div class="card-body">
-        <div class="review-details mb-3" *ngIf="tab !== 'approved'">
+        <div *ngIf="tab !== 'approved'" class="review-details mb-3">
             <div *ngIf="tab === 'previous'">
                 <div>
                     <span class="from">From:</span>&nbsp;
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.from || 'Unknown' }}
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.from }}" *ngIf="account.from"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.from" cbContent="{{ account.from }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </div>
                 <div class="ms-3">
                     <i class="text-muted small">
                         ( {{ account.fromHash }}
-                        <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.fromHash }}"
-                           class="far fa-clipboard"></i>
+                        <i (cbOnSuccess)="copied($event)" cbContent="{{ account.fromHash }}" class="far fa-clipboard"
+                           ngxClipboard></i>
                         )
                     </i>
                 </div>
@@ -64,14 +64,14 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.to }}" *ngIf="account.to"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </div>
                 <div class="ms-3">
                     <i class="text-muted small">
                         ( {{ account.toHash }}
-                        <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}"
-                           class="far fa-clipboard"></i> )
+                        <i (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}" class="far fa-clipboard"
+                           ngxClipboard></i> )
                     </i>
                 </div>
             </div>
@@ -81,14 +81,14 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.to }}" *ngIf="account.to"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </div>
                 <div class="ms-3">
                     <i class="text-muted small">
                         ( {{ account.toHash }}
-                        <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}"
-                           class="far fa-clipboard"></i> )
+                        <i (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}" class="far fa-clipboard"
+                           ngxClipboard></i> )
                     </i>
                 </div>
             </div>
@@ -98,34 +98,34 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.to }}" *ngIf="account.to"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </div>
                 <div class="ms-3">
                     <i class="text-muted small">
                         ( {{ account.toHash }}
-                        <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}"
-                           class="far fa-clipboard"></i> )
+                        <i (cbOnSuccess)="copied($event)" cbContent="{{ account.toHash }}" class="far fa-clipboard"
+                           ngxClipboard></i> )
                     </i>
                 </div>
             </div>
         </div>
-        <div class="alert alert-warning" *ngIf="!transfers?.length">
+        <div *ngIf="!transfers?.length" class="alert alert-warning">
             No transactions found.
         </div>
-        <table class="table" *ngIf="transfers?.length">
+        <table *ngIf="transfers?.length" class="table">
             <thead>
             <tr>
-                <th scope="col" class="checkbox-cell">
-                    <input type="checkbox" [ngModel]="allSelected" (click)="selectAll()"
-                        [disabled]="authService?.user?.role === 'viewer'" [hidden]="overview">
+                <th class="checkbox-cell" scope="col">
+                    <input (click)="selectAll()" [disabled]="authService?.user?.role === 'viewer'" [hidden]="overview"
+                           [ngModel]="allSelected" type="checkbox">
                 </th>
                 <th scope="col">Block</th>
                 <th scope="col">Date</th>
                 <th scope="col">Deploy Hash</th>
-                <th scope="col" *ngIf="tab === 'inbound' || tab === 'approved'">From</th>
-                <th scope="col" *ngIf="tab === 'outbound' || tab === 'approved'">To</th>
-                <th scope="col" class="amount-cell right">Amount</th>
+                <th *ngIf="tab === 'inbound' || tab === 'approved'" scope="col">From</th>
+                <th *ngIf="tab === 'outbound' || tab === 'approved'" scope="col">To</th>
+                <th class="amount-cell right" scope="col">Amount</th>
             </tr>
             </thead>
             <tbody>
@@ -133,16 +133,16 @@
                 paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
                 let i = index">
                 <td class="checkbox-cell">
-                    <input type="checkbox" [(ngModel)]="transfer.selected" (click)="message = null"
-                           [disabled]="authService?.user?.role === 'viewer'"
-                           [hidden]="overview">
+                    <input (click)="message = null" [(ngModel)]="transfer.selected" [disabled]="authService?.user?.role === 'viewer'"
+                           [hidden]="overview"
+                           type="checkbox">
                 </td>
                 <td>{{ transfer.blockHeight }}</td>
                 <td>{{ transfer.timestamp | date: 'medium' }}</td>
                 <td>
                     {{ transfer.deployHash.substr(0, 8) + '&hellip;' + transfer.deployHash.substr(-8, 8) }}
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ transfer.deployHash }}"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.deployHash }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </td>
                 <td *ngIf="tab === 'inbound' || tab === 'approved'">
                         <span *ngIf="transfer.from">
@@ -152,8 +152,8 @@
                              {{ transfer.fromHash.substr(0, 17) + '&hellip;' + transfer.fromHash.substr(-4, 4) }}
                         </span>
 
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ transfer.from || transfer.fromHash }}"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.from || transfer.fromHash }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </td>
                 <td *ngIf="tab === 'outbound' || tab === 'approved'">
                          <span *ngIf="transfer.to">
@@ -162,8 +162,8 @@
                     <span *ngIf="!transfer.to">
                             {{ transfer.toHash.substr(0, 17) + '&hellip;' + transfer.toHash.substr(-4, 4) }}
                          </span>
-                    <i ngxClipboard (cbOnSuccess)="copied($event)" cbContent="{{ transfer.to || transfer.toHash }}"
-                       class="far fa-clipboard"></i>
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.to || transfer.toHash }}" class="far fa-clipboard"
+                       ngxClipboard></i>
                 </td>
                 <td class="right amount-cell">
                     {{ transfer.amount / 1000000000 | number:'1.0-2' }}
@@ -195,7 +195,7 @@
                 <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
                     Total (CSPR):
                 </td>
-                <td class="right">{{ ( tab !== 'previous' ? allTransferSum : transfersSum ) | number:'1.0-0' }}</td>
+                <td class="right">{{ (tab !== 'previous' ? allTransferSum : transfersSum) | number:'1.0-0' }}</td>
             </tr>
             <tr>
 
@@ -208,10 +208,10 @@
             </tr>
             </tfoot>
         </table>
-        <div class="row" *ngIf="totalItems > perPage && tab !== 'previous'">
+        <div *ngIf="totalItems > perPage && tab !== 'previous'" class="row">
             <div class="col-sm-4 form-group pt-4">
                 <label>Per page</label>
-                <select name="per-page" class="per-page" [(ngModel)]="perPage" (change)="perPageChanged()">
+                <select (change)="perPageChanged()" [(ngModel)]="perPage" class="per-page" name="per-page">
                     <option value="15">15</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -221,50 +221,50 @@
                 </select>
             </div>
             <div class="col-sm-8 pt-4 right">
-                <pagination-controls id="pagination"
+                <pagination-controls (pageBoundsCorrection)="pageChanged( $event )"
                                      (pageChange)="pageChanged( $event )"
-                                     (pageBoundsCorrection)="pageChanged( $event )"
-                                     maxSize="9"
-                                     directionLinks="true"
                                      autoHide="true"
-                                     responsive="true"
-                                     previousLabel="Previous"
+                                     directionLinks="true"
+                                     id="pagination"
+                                     maxSize="9"
                                      nextLabel="Next"
-                                     screenReaderPaginationLabel="Pagination"
+                                     previousLabel="Previous"
+                                     responsive="true"
+                                     screenReaderCurrentLabel="You're on page"
                                      screenReaderPageLabel="page"
-                                     screenReaderCurrentLabel="You're on page">
+                                     screenReaderPaginationLabel="Pagination">
                 </pagination-controls>
             </div>
         </div>
 
-        <div class="pt-4 right" *ngIf="authService?.user?.role !== 'viewer'">
-            <div class="alert" *ngIf="message"
+        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+            <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"
                  [class.alert-warning]="message.type === 'warning'"
-                 [class.alert-danger]="message.type === 'error'">
+                 class="alert">
                 {{ message.text }}
             </div>
-            <div class="alert alert-warning" *ngIf="authService.status && (tab !== 'approved' || search)">
+            <div *ngIf="authService.status && (tab !== 'approved' || search)" class="alert alert-warning">
                 Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
             </div>
-            <button class="btn btn-lg btn-warning me-3" (click)="cancel()"
-                    [disabled]="isSaving" [class.btn-disabled]="isSaving" *ngIf="tab !== 'approved'">
+            <button (click)="cancel()" *ngIf="tab !== 'approved'"
+                    [class.btn-disabled]="isSaving" [disabled]="isSaving" class="btn btn-lg btn-warning me-3">
                 Cancel
             </button>
-            <button class="btn btn-lg btn-success" *ngIf="tab !== 'approved' || search"
-                    (click)="save()"
+            <button (click)="save()" *ngIf="tab !== 'approved' || search"
+                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
                     [disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
-                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving || authService.status">
+                    class="btn btn-lg btn-success">
                 Save
             </button>
 
-            <button class="btn btn-lg btn-success" *ngIf="tab === 'approved' && !search"
-                    style="width:200px;"
-                    (click)="calculate()"
+            <button (click)="calculate()" *ngIf="tab === 'approved' && !search"
+                    [class.btn-disabled]="authService.status"
                     [disabled]="authService.status"
-                    [class.btn-disabled]="authService.status">
-                <i *ngIf="authService.status" class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                    class="btn btn-lg btn-success"
+                    style="width:200px;">
+                <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
 
                 <span *ngIf="!authService.status">Approve&nbsp;All</span>
                 <span *ngIf="authService.status">Deploying&hellip;</span>

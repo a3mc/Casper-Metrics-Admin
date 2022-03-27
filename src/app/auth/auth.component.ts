@@ -11,6 +11,11 @@ export class AuthComponent implements OnInit {
 
     public userForm: FormGroup;
 
+    constructor(
+        public authService: AuthService,
+    ) {
+    }
+
     get email(): AbstractControl {
         return this.userForm.get( 'UserEmail' );
     }
@@ -21,11 +26,6 @@ export class AuthComponent implements OnInit {
 
     get faCode(): AbstractControl {
         return this.userForm.get( 'FaCode' );
-    }
-
-    constructor(
-        public authService: AuthService,
-    ) {
     }
 
     ngOnInit(): void {

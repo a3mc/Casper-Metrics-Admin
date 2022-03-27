@@ -20,21 +20,12 @@ export interface AccountNode {
     styleUrls: ['./tree.component.scss']
 } )
 export class TreeComponent implements OnInit {
-    @ViewChild( 'chart', { static: true } ) private chartContainer: ElementRef;
     @Output( 'selectedNode' ) selectedNode = new EventEmitter<any>();
-
-    @Input( 'data' )
-    set data( value: AccountNode ) {
-        this._data = Object.assign( {}, value );
-        this.renderTreeChart();
-    };
-
     public root: any;
     public height: number;
     public width: number;
     public maxChildren = 20;
-
-    private _data: AccountNode;
+    @ViewChild( 'chart', { static: true } ) private chartContainer: ElementRef;
     private tree: any;
     private svg: any;
     private treeData: any;
@@ -49,6 +40,14 @@ export class TreeComponent implements OnInit {
 
     constructor() {
     }
+
+    private _data: AccountNode;
+
+    @Input( 'data' )
+    set data( value: AccountNode ) {
+        this._data = Object.assign( {}, value );
+        this.renderTreeChart();
+    };
 
     ngOnInit(): void {
     }
@@ -111,14 +110,6 @@ export class TreeComponent implements OnInit {
         }, 100 );
     }
 
-    private _click( event: any, d: any ) {
-        const fromTo = event.target.parentNode.className.baseVal.split( ' ' )[1]
-            .substr( 5 ).split( ';' );
-
-        this.selectNodes( fromTo );
-        this.selectedNode.emit( fromTo );
-    }
-
     public selectNodes( fromTo ): void {
         this.svg.selectAll( 'circle[multi=false]' )
             .style( 'opacity', 0.5 )
@@ -174,6 +165,14 @@ export class TreeComponent implements OnInit {
         }
     }
 
+    private _click( event: any, d: any ) {
+        const fromTo = event.target.parentNode.className.baseVal.split( ' ' )[1]
+            .substr( 5 ).split( ';' );
+
+        this.selectNodes( fromTo );
+        this.selectedNode.emit( fromTo );
+    }
+
     private updateChart( source ) {
         let i = 0;
         this.treeData = this.tree( this.root );
@@ -212,7 +211,7 @@ export class TreeComponent implements OnInit {
             } )
             .attr( 'multi', ( d ) => {
                 return (
-                    !! d.data.multiple
+                    !!d.data.multiple
                 );
             } )
             .attr( 'r', 0.0000010 )

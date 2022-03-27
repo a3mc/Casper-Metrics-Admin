@@ -8,11 +8,11 @@ import { Router } from "@angular/router";
 } )
 export class AuthService {
 
+    public static access_token = localStorage.getItem( 'access_token' );
     public loggedIn = false;
     public isActivating = false;
     public errorMessage: string;
     public user: any;
-    public static access_token = localStorage.getItem( 'access_token' );
     public status = false;
     private _authTimer: number;
 

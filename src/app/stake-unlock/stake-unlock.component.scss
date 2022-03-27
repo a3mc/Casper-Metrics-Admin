@@ -1,28 +1,29 @@
 .review {
-    margin-top: 100px;
-    .validators {
-        display: block;
+	margin-top: 100px;
 
-        .right {
-            text-align: right;
-        }
+	.validators {
+		display: block;
 
-        button {
-            width: 120px;
-            text-align: center;
-        }
+		.right {
+			text-align: right;
+		}
 
-        button.btn-close {
-            width: 24px;
-            float: right;
-            margin-top: -35px;
-            margin-right: -35px;
-        }
+		button {
+			width: 120px;
+			text-align: center;
+		}
 
-        .text-bold {
-            font-weight: bold;
-        }
-    }
+		button.btn-close {
+			width: 24px;
+			float: right;
+			margin-top: -35px;
+			margin-right: -35px;
+		}
+
+		.text-bold {
+			font-weight: bold;
+		}
+	}
 }
 
 

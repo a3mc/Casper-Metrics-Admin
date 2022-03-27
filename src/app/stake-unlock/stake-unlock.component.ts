@@ -36,7 +36,8 @@ export class StakeUnlockComponent implements OnInit {
         this.isCalculating = true;
         this._apiClientService.post( 'validators-unlock?amount=' + this.unlock365, null )
             .subscribe(
-                () => {},
+                () => {
+                },
                 ( error ) => {
                     this.message = {
                         type: 'error',

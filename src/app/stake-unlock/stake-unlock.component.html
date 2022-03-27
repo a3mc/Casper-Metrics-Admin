@@ -2,68 +2,68 @@
     <div class="card-body validators">
         <table class="table">
             <thead>
-                <tr>
-                    <th>Total Locked</th>
-                    <th>Total Unlocked</th>
-                    <th>Unlocked in 90 days</th>
-                    <th>Unlocked in 1 year</th>
-                    <th>Days from Genesis</th>
-                </tr>
-                <tr>
-                    <th>{{ locked | number:'1.0-2' }}</th>
-                    <th>0</th>
-                    <th>
-                        {{ locked - unlock365 | number:'1.0-2' }}
-                    </th>
-                    <th>
-                        <input [(ngModel)]="unlock365" (ngModelChange)="unlock90 = locked - unlock365"
-                               [disabled]="authService?.user?.role === 'viewer'">
-                    </th>
-                    <th>0</th>
-                </tr>
+            <tr>
+                <th>Total Locked</th>
+                <th>Total Unlocked</th>
+                <th>Unlocked in 90 days</th>
+                <th>Unlocked in 1 year</th>
+                <th>Days from Genesis</th>
+            </tr>
+            <tr>
+                <th>{{ locked | number:'1.0-2' }}</th>
+                <th>0</th>
+                <th>
+                    {{ locked - unlock365 | number:'1.0-2' }}
+                </th>
+                <th>
+                    <input (ngModelChange)="unlock90 = locked - unlock365" [(ngModel)]="unlock365"
+                           [disabled]="authService?.user?.role === 'viewer'">
+                </th>
+                <th>0</th>
+            </tr>
             </thead>
             <tbody>
-                <tr class="text-muted">
-                    <td>{{ locked | number:'1.0-2' }}</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>{{ unlock365 | number:'1.0-2' }}</td>
-                    <td>89</td>
-                </tr>
+            <tr class="text-muted">
+                <td>{{ locked | number:'1.0-2' }}</td>
+                <td>0</td>
+                <td>0</td>
+                <td>{{ unlock365 | number:'1.0-2' }}</td>
+                <td>89</td>
+            </tr>
             </tbody>
             <tbody>
-                <tr *ngFor="let unlockDate of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]"
-                    [class.text-bold]="unlockDate === 14">
-                    <td>{{ locked - ( unlock90 / 14 * unlockDate ) | number:'1.0-2' }}</td>
-                    <td>{{ unlock90 / 14 * unlockDate | number:'1.0-2' }}</td>
-                    <td>{{ unlock90 / 14 | number:'1.0-2' }}</td>
-                    <td>0</td>
-                    <td>{{ 89 + unlockDate }}</td>
-                </tr>
+            <tr *ngFor="let unlockDate of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]"
+                [class.text-bold]="unlockDate === 14">
+                <td>{{ locked - (unlock90 / 14 * unlockDate) | number:'1.0-2' }}</td>
+                <td>{{ unlock90 / 14 * unlockDate | number:'1.0-2' }}</td>
+                <td>{{ unlock90 / 14 | number:'1.0-2' }}</td>
+                <td>0</td>
+                <td>{{ 89 + unlockDate }}</td>
+            </tr>
             </tbody>
             <tbody>
-                <tr class="text-bold">
-                    <td>0</td>
-                    <td>{{ locked - unlock90 | number:'1.0-2'}}</td>
-                    <td>0</td>
-                    <td>{{ locked - unlock90 | number:'1.0-2' }}</td>
-                    <td>365</td>
-                </tr>
+            <tr class="text-bold">
+                <td>0</td>
+                <td>{{ locked - unlock90 | number:'1.0-2'}}</td>
+                <td>0</td>
+                <td>{{ locked - unlock90 | number:'1.0-2' }}</td>
+                <td>365</td>
+            </tr>
             </tbody>
         </table>
-        <div class="pt-4 right" *ngIf="authService?.user?.role !== 'viewer'">
-            <div class="alert" *ngIf="message"
+        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+            <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"
                  [class.alert-warning]="message.type === 'warning'"
-                 [class.alert-danger]="message.type === 'error'">
+                 class="alert">
                 {{ message.text }}
             </div>
-            <button class="btn btn-lg btn-success" style="width: 240px"
-                    [class.btn-disabled]="isCalculating"
+            <button (click)="save()" [class.btn-disabled]="isCalculating"
                     [disabled]="isCalculating"
-                    (click)="save()">
-                <i *ngIf="isCalculating" class="fa fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                    class="btn btn-lg btn-success"
+                    style="width: 240px">
+                <i *ngIf="isCalculating" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
                 Save &amp; Approve
             </button>
             <div class="mt-2 text-muted">

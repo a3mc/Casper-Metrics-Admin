@@ -146,7 +146,8 @@ export class AccountComponent implements OnInit {
         this._apiClientService.post( 'transfers/calculate', null )
             .pipe( take( 1 ) )
             .subscribe(
-                () => {},
+                () => {
+                },
                 ( error: any ) => {
                     console.error( error );
                 }

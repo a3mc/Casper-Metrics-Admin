@@ -1,8 +1,8 @@
-<div class="alert alert-danger" *ngIf="denyError; else signForm">
+<div *ngIf="denyError; else signForm" class="alert alert-danger">
     Something went wrong. Contact your administrator.
 </div>
 <ng-template #signForm>
-    <form (submit)="save()" class="form activate-form" [formGroup]="userForm" *ngIf="userForm">
+    <form (submit)="save()" *ngIf="userForm" [formGroup]="userForm" class="form activate-form">
 
         <h4>Please complete the form to activate your account</h4>
 
@@ -18,19 +18,19 @@
         </div>
 
         <div class="form-group">
-            <label for="userPassword" class="mt-3">
+            <label class="mt-3" for="userPassword">
                 Password <small class="text-muted">(12 chars min.)</small>
             </label>
-            <input formControlName="UserPassword" id="userPassword" minlength="12" maxlength="128" autofocus
-                   class="form-control" required type="password" name="password" autocomplete="new-password"
-                   [class.is-invalid]="userForm.controls.UserPassword.touched && userForm.controls.UserPassword.invalid">
+            <input [class.is-invalid]="userForm.controls.UserPassword.touched && userForm.controls.UserPassword.invalid" autocomplete="new-password" autofocus class="form-control" formControlName="UserPassword"
+                   id="userPassword" maxlength="128" minlength="12" name="password" required
+                   type="password">
         </div>
 
         <div class="form-group">
-            <label for="userPassword" class="mt-3">Repeat Password</label>
-            <input formControlName="UserPassword2" id="userPassword2" minlength="12" maxlength="128"
-                   class="form-control" required type="password" name="password2" autocomplete="new-password"
-                   [class.is-invalid]="userForm.controls.UserPassword2.touched && userForm.controls.UserPassword2.invalid">
+            <label class="mt-3" for="userPassword">Repeat Password</label>
+            <input [class.is-invalid]="userForm.controls.UserPassword2.touched && userForm.controls.UserPassword2.invalid" autocomplete="new-password" class="form-control" formControlName="UserPassword2"
+                   id="userPassword2" maxlength="128" minlength="12" name="password2" required
+                   type="password">
         </div>
 
         <div *ngIf="twoFactor" class="form-group mt-2 p-4">
@@ -40,26 +40,26 @@
             </div>
 
             <div class="mb-2">2. Scan the QR code with your Authenticator app:</div>
-            <qrcode [qrdata]="twoFactor.uri" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+            <qrcode [errorCorrectionLevel]="'M'" [qrdata]="twoFactor.uri" [width]="256"></qrcode>
 
             <div class="mt-3">
-                <label for="verifyCode" class="mb-2">
+                <label class="mb-2" for="verifyCode">
                     3. Enter the code from your Authenticator app:
                 </label>
-                <input minlength="6" maxlength="6" size="6" name="verifyCode" id="verifyCode" required
-                       [class.is-invalid]="userForm.controls.VerificationCode.touched &&
-                            userForm.controls.VerificationCode.invalid"
-                       pattern="[0-9]+" [disabled]="twoFactorVerified"
-                       formControlName="VerificationCode" class="form-control ms-4">
+                <input [class.is-invalid]="userForm.controls.VerificationCode.touched &&
+                            userForm.controls.VerificationCode.invalid" [disabled]="twoFactorVerified" class="form-control ms-4" formControlName="VerificationCode" id="verifyCode" maxlength="6"
+                       minlength="6"
+                       name="verifyCode" pattern="[0-9]+"
+                       required size="6">
 
-                <button class="btn btn-small btn-primary btn-success ms-2"
+                <button (click)="verifyCode()"
                         [disabled]="verificationCode.invalid || twoFactorVerified"
-                        type="button" (click)="verifyCode()">
+                        class="btn btn-small btn-primary btn-success ms-2" type="button">
                     Verify
                 </button>
 
-                <i class="fa fa-check text-success ms-3" *ngIf="twoFactorVerified"></i>
-                <i class="fa fa-exclamation text-danger ms-3" *ngIf="twoFactorWrong"></i>
+                <i *ngIf="twoFactorVerified" class="fa fa-check text-success ms-3"></i>
+                <i *ngIf="twoFactorWrong" class="fa fa-exclamation text-danger ms-3"></i>
             </div>
         </div>
 

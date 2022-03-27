@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountNode } from "./tree/tree.component";
 import { VAULTS } from "../vaults";
 import { AuthService } from './services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component( {
     selector: 'app-root',

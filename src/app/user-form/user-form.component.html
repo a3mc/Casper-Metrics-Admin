@@ -9,8 +9,8 @@
     </div>
 </div>
 
-<form (submit)="save()" class="form sign-in-form" [formGroup]="userForm"
-      *ngIf="!user.deleted && user.id !== authService.user.id">
+<form (submit)="save()" *ngIf="!user.deleted && user.id !== authService.user.id" [formGroup]="userForm"
+      class="form sign-in-form">
 
     <div *ngIf="showSuccess" class="form-group alert alert-success success-message mb-3">
         Saved successfully.
@@ -20,70 +20,74 @@
         {{ errorMessage }}
     </div>
 
-    <div class="form-group" *ngIf="!user.id">
+    <div *ngIf="!user.id" class="form-group">
         <label for="userEmail">Email</label>
-        <input formControlName="UserEmail" id="userEmail" maxlength="128" [email]="true"
-               class="form-control" required type="email" name="email"
-               [class.is-invalid]="userForm.controls.UserEmail.touched && userForm.controls.UserEmail.invalid">
+        <input [class.is-invalid]="userForm.controls.UserEmail.touched && userForm.controls.UserEmail.invalid" [email]="true" class="form-control" formControlName="UserEmail"
+               id="userEmail" maxlength="128" name="email" required
+               type="email">
     </div>
 
-    <div class="form-group" *ngIf="!user.id">
-        <label for="firstName" class="mt-3">First Name</label>
-        <input formControlName="FirstName" id="firstName" minlength="1" maxlength="128"
-               class="form-control" required name="firstName"
+    <div *ngIf="!user.id" class="form-group">
+        <label class="mt-3" for="firstName">First Name</label>
+        <input [class.is-invalid]="userForm.controls.FirstName.touched && userForm.controls.FirstName.invalid" class="form-control" formControlName="FirstName" id="firstName"
+               maxlength="128" minlength="1" name="firstName"
                pattern="[a-zA-Z ]*"
-               [class.is-invalid]="userForm.controls.FirstName.touched && userForm.controls.FirstName.invalid">
+               required>
     </div>
 
-    <div class="form-group" *ngIf="!user.id">
-        <label for="lastName" class="mt-3">Last Name</label>
-        <input formControlName="LastName" id="lastName" minlength="1" maxlength="128"
-               class="form-control" required name="lastName"
+    <div *ngIf="!user.id" class="form-group">
+        <label class="mt-3" for="lastName">Last Name</label>
+        <input [class.is-invalid]="userForm.controls.LastName.touched && userForm.controls.LastName.invalid" class="form-control" formControlName="LastName" id="lastName"
+               maxlength="128" minlength="1" name="lastName"
                pattern="[a-zA-Z ]*"
-               [class.is-invalid]="userForm.controls.LastName.touched && userForm.controls.LastName.invalid">
+               required>
     </div>
 
-    <div class="form-group" *ngIf="user.id && user.active">
-        <label for="role" class="mt-3">Role</label>
-        <select formControlName="Role" id="role"
-               class="form-control" required name="role"
-               [class.is-invalid]="userForm.controls.Role.touched && userForm.controls.Role.invalid">
+    <div *ngIf="user.id && user.active" class="form-group">
+        <label class="mt-3" for="role">Role</label>
+        <select [class.is-invalid]="userForm.controls.Role.touched && userForm.controls.Role.invalid" class="form-control"
+                formControlName="Role" id="role" name="role"
+                required>
             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
         </select>
     </div>
 
-    <div class="form-group mt-3" *ngIf="user.id && user.active">
-        <button class="btn btn-success"
-                [class.btn-warning]="userForm.invalid"
+    <div *ngIf="user.id && user.active" class="form-group mt-3">
+        <button [class.btn-warning]="userForm.invalid"
                 [disabled]="userForm.invalid"
-                type="submit">Save</button>
+                class="btn btn-success"
+                type="submit">Save
+        </button>
     </div>
 
-    <div class="form-group mt-5" *ngIf="user.id">
-        <button class="btn btn-sm btn-warning"
-                (click)="confirmReset()"
-                type="button">Reset password &amp; 2FA</button>
+    <div *ngIf="user.id" class="form-group mt-5">
+        <button (click)="confirmReset()"
+                class="btn btn-sm btn-warning"
+                type="button">Reset password &amp; 2FA
+        </button>
 
         <div>
             <small class="text-muted">User will receive a new activation link. Role will be set to "Viewer".</small>
         </div>
     </div>
 
-    <div class="form-group mt-5" *ngIf="user.id">
-        <button class="btn btn-sm btn-danger"
-                (click)="confirmDeactivate()"
-                type="button">Deactivate user account permanently</button>
+    <div *ngIf="user.id" class="form-group mt-5">
+        <button (click)="confirmDeactivate()"
+                class="btn btn-sm btn-danger"
+                type="button">Deactivate user account permanently
+        </button>
 
         <div>
             <small class="text-muted">Logs related to the user will remain.</small>
         </div>
     </div>
 
-    <div class="form-group mt-3" *ngIf="!user.id">
-        <button class="btn btn-success"
-                [class.btn-warning]="userForm.invalid"
+    <div *ngIf="!user.id" class="form-group mt-3">
+        <button [class.btn-warning]="userForm.invalid"
                 [disabled]="userForm.invalid"
-                type="submit">Send Invitation Link</button>
+                class="btn btn-success"
+                type="submit">Send Invitation Link
+        </button>
 
         <div class="text-muted text-small mt-2">
             <i>Link expires in 24h.</i>
