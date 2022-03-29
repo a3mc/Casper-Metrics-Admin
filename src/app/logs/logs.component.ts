@@ -57,7 +57,7 @@ export class LogsComponent implements OnInit {
                         this.logs[i] = result;
                     }
                 }
-            )
+            );
     }
 
     public copied( event: any ): void {
