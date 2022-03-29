@@ -208,7 +208,7 @@
             </tr>
             </tfoot>
         </table>
-        <div *ngIf="totalItems > perPage && tab !== 'previous'" class="row">
+        <div *ngIf="tab !== 'previous'" class="row">
             <div class="col-sm-4 form-group pt-4">
                 <label>Per page</label>
                 <select (change)="perPageChanged()" [(ngModel)]="perPage" class="per-page" name="per-page">
@@ -220,7 +220,7 @@
                     <option value="1000">1000</option>
                 </select>
             </div>
-            <div class="col-sm-8 pt-4 right">
+            <div class="col-sm-8 pt-4 right" *ngIf="totalItems > perPage">
                 <pagination-controls (pageBoundsCorrection)="pageChanged( $event )"
                                      (pageChange)="pageChanged( $event )"
                                      autoHide="true"

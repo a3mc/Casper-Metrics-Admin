@@ -1,1 +1,92 @@
-<p>logs works!</p>
+<div class="card logs p-5">
+    <div class="card-title">
+        <h3 class="mb-4">
+            Logs
+        </h3>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    Action
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let log of logs |
+                paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
+                let i = index">
+                <tr>
+                    <td>{{ log.date | date: 'medium' }}</td>
+                    <td>
+                        {{ log.userName }}<br>
+                        <small class="text-muted text-small">({{ log.userEmail }})</small>
+                    </td>
+                    <td>{{ log.action }}</td>
+                    <td>
+                        <a (click)="showDetails( log, i )" class="btn b btn-link">Details</a>
+                    </td>
+                </tr>
+                <tr *ngIf="log.extra">
+                    <td colspan="4" class="ps-5 pb-5">
+                        <h5>Deploy hashes:</h5>
+                        <ng-container *ngIf="log.extra.length && log.extra.length < 100; else downloadMessage">
+                            <div *ngFor="let hash of log.extra">
+                                {{ hash }}
+                                <i (cbOnSuccess)="copied($event)" cbContent="{{ hash }}" class="far fa-clipboard"
+                                   ngxClipboard></i>
+                            </div>
+                        </ng-container>
+                        <ng-template #downloadMessage>
+                            <div class="alert alert-warning mb-0">
+                                Due the to the large amount of TXs ({{ log.extra.length }}) they were not rendered.<br>
+                                Please download the file instead.
+                            </div>
+                        </ng-template>
+                        <br>
+                        <a (click)="downloadFile( log.extra )" class="btn btn-link">Download CSV</a>
+                    </td>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-sm-4 form-group pt-4">
+                <label>Per page</label>&nbsp;
+                <select (change)="perPageChanged()" [(ngModel)]="perPage" class="per-page" name="per-page">
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                </select>
+            </div>
+            <div class="col-sm-8 pt-4 right" *ngIf="totalItems > perPage">
+                <pagination-controls (pageBoundsCorrection)="pageChanged( $event )"
+                                     (pageChange)="pageChanged( $event )"
+                                     autoHide="true"
+                                     directionLinks="true"
+                                     id="pagination"
+                                     maxSize="9"
+                                     nextLabel="Next"
+                                     previousLabel="Previous"
+                                     responsive="true"
+                                     screenReaderCurrentLabel="You're on page"
+                                     screenReaderPageLabel="page"
+                                     screenReaderPaginationLabel="Pagination">
+                </pagination-controls>
+            </div>
+        </div>
+    </div>
+
+</div>

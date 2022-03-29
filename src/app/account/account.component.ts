@@ -310,9 +310,9 @@ export class AccountComponent implements OnInit {
     }
 
     public copied( event ): void {
-        event.event.className = 'far fa-clipboard text-success';
+        event.event.target.className = 'far fa-clipboard text-success';
         setTimeout( () => {
-            event.event.className = 'far fa-clipboard';
+            event.event.target.className = 'far fa-clipboard';
         }, 3000 );
     }
 
