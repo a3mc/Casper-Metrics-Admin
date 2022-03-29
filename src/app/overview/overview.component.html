@@ -1,35 +1,29 @@
 <div class="overview">
     <div class="metrics">
         <div class="pt-3">
-            Circulating Supply: {{ circulatingSupply | number:'1.0-2' }}
-            <div class="text-muted">
-                <i>Circulating Supply = Unlocked Funds + Unlocked Validators + Rewards of Unlocked Validators</i>
-            </div>
-
+            Current Circulating Supply: <b>{{ circulatingSupply | number:'1.0-2' }}</b>
         </div>
-        <div class="pt-3">
-            Total Supply: {{ totalSupply | number:'1.0-2' }}
-        </div>
-        <div class="pt-3">
-            Validators Weight: {{ validatorsWeight | number:'1.0-2' }}
+        <div class="mt-2 text-muted text-small">
+            It includes approved transactions, unlocked stake and related Validators rewards.
         </div>
     </div>
     <div class="mt-5">
-        <h3 class="approved-header">Approved Unlock Transactions</h3>
-        <app-account></app-account>
+        <h3>Approve Unlocked Funds</h3>
+        <h4 class="approved-header mt-5">Transfers</h4>
+        <app-account [overview]="true"></app-account>
     </div>
     <div class="mt-5">
-        <h3 class="approved-header">Search TX by Deploy Hash</h3>
-        <div class="form-group mt-5">
-            <label for="deploy-hash" class="d-block">
-                Deploy Hash
+        <h3 class="mb-2 mt-5 pt-5">Search TXs by Deploy hashes or Account addresses</h3>
+        <div class="form-group mt-3">
+            <label class="d-block" for="deploy-hash">
+                Search:
             </label>
-            <input class="form-control" [(ngModel)]="deployHash" name="deployHash" id="deploy-hash"
-                   (ngModelChange)="deployHashChanged()" />
+            <input (ngModelChange)="searchChanged()" [(ngModel)]="searchTerm" class="form-control" id="search-term"
+                   name="searchTerm"/>
         </div>
 
         <div style="min-height: 300px">
-            <app-account [deployHash]="deployHash" *ngIf="deployHash && showDeployHash"></app-account>
+            <app-account *ngIf="searchTerm && showSearchTerm" [searchTerm]="searchTerm"></app-account>
         </div>
     </div>
 </div>

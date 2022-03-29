@@ -1,12 +1,12 @@
-<div class="card users p-5" *ngIf="authService.user.role === 'administrator'">
+<div *ngIf="authService.user.role === 'administrator'" class="card users p-5">
     <div class="card-body">
         <div class="row">
             <div class="col-sm-6">
                 <h4>Manage Users</h4>
-                <button class="mt-2 btn btn-primary btn-success" (click)="addNewUser()">Add New</button>
+                <button (click)="addNewUser()" class="mt-2 btn btn-primary btn-success">Add New</button>
                 <div *ngIf="users?.length" class="mt-5">
                     <div *ngFor="let user of users; let i = index" class="mt-3">
-                        <a (click)="setUser( user )" class="user-link" [class.text-muted]="!user.active">
+                        <a (click)="setUser( user )" [class.text-muted]="!user.active" class="user-link">
                             {{ i + 1  }}.
                             {{ user.firstName }} {{ user.lastName }}
                             ({{ user.email }})
@@ -14,8 +14,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6" *ngIf="selectedUser">
-                <app-user-form [user]="selectedUser" (updated)="userUpdated()"></app-user-form>
+            <div *ngIf="selectedUser" class="col-sm-6">
+                <app-user-form (updated)="userUpdated()" [user]="selectedUser"></app-user-form>
             </div>
         </div>
 

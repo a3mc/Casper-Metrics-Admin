@@ -9,7 +9,8 @@ export class HttpHeaderRequestInterceptor implements HttpInterceptor {
 
     constructor(
         private _authService: AuthService
-    ) {}
+    ) {
+    }
 
     intercept( request: HttpRequest<any>, next: HttpHandler ): Observable<HttpEvent<any>> {
         if ( AuthService.access_token ) {

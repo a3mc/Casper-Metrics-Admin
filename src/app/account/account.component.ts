@@ -1,12 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { distinctUntilChanged, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ApiClientService } from '../services/api-client.service';
 import { AccountNode, TreeComponent } from '../tree/tree.component';
 import { VAULTS } from "../../vaults";
 import { ActivatedRoute } from "@angular/router";
 import * as moment from 'moment';
 import { AuthService } from '../services/auth.service';
-import { from } from "rxjs";
 
 export interface Message {
     type?: string;
@@ -25,7 +24,9 @@ export interface TransfersResponse {
     styleUrls: ['./account.component.scss']
 } )
 export class AccountComponent implements OnInit {
-    @Input( 'deployHash' ) deployHash?: string;
+    @Input( 'searchTerm' ) search?: string;
+    @Input( 'overview' ) overview?: boolean;
+
     @ViewChild( TreeComponent ) tree;
     public vaults: AccountNode[] = Object.assign( [], VAULTS );
     public account: AccountNode;
@@ -44,10 +45,9 @@ export class AccountComponent implements OnInit {
     public showTable = false;
     public page = 1;
     public totalItems = 0;
-    public perPage = 50;
+    public perPage = 15;
     public totalApproved = 0;
     public allTransferSum = 0;
-    public allOutbound: boolean = null;
 
     private _connectedTransactions;
 
@@ -59,7 +59,7 @@ export class AccountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.page = 0;
+        this.page = 1;
         this.totalApproved = 0;
         this.totalItems = 0;
         this.route.paramMap.subscribe( ( params ) => {
@@ -72,9 +72,9 @@ export class AccountComponent implements OnInit {
                     this.showTree();
                 }
             } );
-            if( !params.keys.length ) {
-                if ( this.deployHash && this.deployHash.length ) {
-                    this.searchDeployHash();
+            if ( !params.keys.length ) {
+                if ( this.search && this.search.length ) {
+                    this.searchTerm();
                 } else {
                     this.approvedTransfers();
                 }
@@ -141,9 +141,22 @@ export class AccountComponent implements OnInit {
 
     }
 
-    public searchDeployHash() {
+    public calculate(): void {
+        this.authService.status = true;
+        this._apiClientService.post( 'transfers/calculate', null )
+            .pipe( take( 1 ) )
+            .subscribe(
+                () => {
+                },
+                ( error: any ) => {
+                    console.error( error );
+                }
+            );
+    }
+
+    public searchTerm() {
         this._apiClientService.get(
-            'transfers?deployHash=' + this.deployHash
+            'transfers?search=' + this.search
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -160,7 +173,7 @@ export class AccountComponent implements OnInit {
         if ( !nodePair[0] || !nodePair[1] ) return;
         this.totalItems = 0;
         this.totalApproved = 0;
-        this.page = 0;
+        this.page = 1;
         if ( nodePair[0] === nodePair[1] ) {
             const vault = this.vaults.find( vault => vault.fromHash === nodePair[0] );
             this.setInbound( vault );
@@ -221,7 +234,6 @@ export class AccountComponent implements OnInit {
                 this.totalItems = result.totalItems.count;
                 this.totalApproved = result.approvedSum;
                 this.allTransferSum = result.totalSum;
-                this.allOutbound = result.allOutbound;
                 this.editTransfers( result.data, 'outbound' );
             } );
     }
@@ -235,10 +247,11 @@ export class AccountComponent implements OnInit {
     public countApproved(): number {
         return ( this.tab !== 'previous' ? this.totalApproved : 0 )
             + this.transfers.filter( transfer => transfer.approved )
-            .reduce( ( a, b ) => a + b.amount / 1000000000, 0 );
+                .reduce( ( a, b ) => a + b.amount / 1000000000, 0 );
     }
 
     public selectAll(): void {
+        this.message = null;
         if ( !this.transfers.every( transfer => transfer.selected ) ) {
             this.transfers.forEach( transfer => {
                 transfer.selected = true;
@@ -297,9 +310,9 @@ export class AccountComponent implements OnInit {
     }
 
     public copied( event ): void {
-        event.event.className = 'far fa-clipboard text-success';
+        event.event.target.className = 'far fa-clipboard text-success';
         setTimeout( () => {
-            event.event.className = 'far fa-clipboard';
+            event.event.target.className = 'far fa-clipboard';
         }, 3000 );
     }
 
@@ -313,7 +326,7 @@ export class AccountComponent implements OnInit {
         ).join( ',' );
         this._apiClientService.post( 'transfers/approve?approvedIds=' + approved +
             '&declinedIds=' + declined, {} )
-            .pipe( take ( 1 ) )
+            .pipe( take( 1 ) )
             .subscribe(
                 ( result ) => {
                     this.message = {
@@ -324,37 +337,9 @@ export class AccountComponent implements OnInit {
                     this.transfers.forEach( transfer => {
                         transfer.approved = transfer.selected;
                     } );
-                    this.showTree();
-                },
-                ( error ) => {
-                    this.message = {
-                        type: 'error',
-                        text: 'Error updating records.',
+                    if ( this.tab !== 'approved' ) {
+                        this.showTree();
                     }
-                    this.isSaving = false;
-                    console.error( error );
-                } );
-    }
-
-    public saveAllOutbound(): void {
-        this.isSaving = true;
-        this._apiClientService.post( 'transfers/approve?' +
-            'allOutboundHash=' + this.account.toHash +
-            '&allOutbound=' + this.allOutbound,
-            {}
-        )
-            .pipe( take ( 1 ) )
-            .subscribe(
-                ( result ) => {
-                    this.message = {
-                        type: 'success',
-                        text: 'Saved successfully.',
-                    }
-                    this.isSaving = false;
-                    this.transfers.forEach( transfer => {
-                        transfer.approved = true;
-                    } );
-                    this.showTree();
                 },
                 ( error ) => {
                     this.message = {

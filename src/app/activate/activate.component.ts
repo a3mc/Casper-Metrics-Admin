@@ -21,6 +21,14 @@ export class ActivateComponent implements OnInit {
     public errorMessage: string = null;
     private _token: string = null;
 
+    constructor(
+        public authService: AuthService,
+        private _apiClientService: ApiClientService,
+        private _activeRoute: ActivatedRoute,
+        private _router: Router,
+    ) {
+    }
+
     get password(): AbstractControl {
         return this.userForm.get( 'UserPassword' );
     }
@@ -31,14 +39,6 @@ export class ActivateComponent implements OnInit {
 
     get verificationCode(): AbstractControl {
         return this.userForm.get( 'VerificationCode' );
-    }
-
-    constructor(
-        public authService: AuthService,
-        private _apiClientService: ApiClientService,
-        private _activeRoute: ActivatedRoute,
-        private _router: Router,
-    ) {
     }
 
     ngOnInit(): void {
@@ -105,7 +105,7 @@ export class ActivateComponent implements OnInit {
             );
     }
 
-    private _checkPasswords: ValidatorFn = ( group: AbstractControl ):  ValidationErrors | null => {
+    private _checkPasswords: ValidatorFn = ( group: AbstractControl ): ValidationErrors | null => {
         if ( !this.userForm ) {
             return null;
         }
@@ -117,7 +117,9 @@ export class ActivateComponent implements OnInit {
     private _generate2fa(): void {
         this.twoFactorVerified = false;
         this._apiClientService.get( 'generate2fa?email=' + this.user.email ).pipe( take( 1 ) )
-            .subscribe( result => { this.twoFactor = result; } );
+            .subscribe( result => {
+                this.twoFactor = result;
+            } );
     }
 
     private _createUserForm(): void {

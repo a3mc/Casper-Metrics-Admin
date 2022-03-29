@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StakeUnlockComponent } from './stake-unlock.component';
+import { LogsComponent } from './logs.component';
 
-describe( 'ValidatorsComponent', () => {
-    let component: StakeUnlockComponent;
-    let fixture: ComponentFixture<StakeUnlockComponent>;
+describe( 'LogsComponent', () => {
+    let component: LogsComponent;
+    let fixture: ComponentFixture<LogsComponent>;
 
     beforeEach( async () => {
         await TestBed.configureTestingModule( {
-            declarations: [StakeUnlockComponent]
+            declarations: [LogsComponent]
         } )
             .compileComponents();
     } );
 
     beforeEach( () => {
-        fixture = TestBed.createComponent( StakeUnlockComponent );
+        fixture = TestBed.createComponent( LogsComponent );
         component = fixture.componentInstance;
         fixture.detectChanges();
     } );

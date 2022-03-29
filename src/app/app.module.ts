@@ -25,6 +25,7 @@ import { UsersComponent } from './users/users.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ActivateComponent } from './activate/activate.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { LogsComponent } from './logs/logs.component';
 
 @NgModule( {
     declarations: [
@@ -37,7 +38,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
         SignoutComponent,
         UserFormComponent,
         UsersComponent,
-        ActivateComponent
+        ActivateComponent,
+        LogsComponent
     ],
     imports: [
         BrowserModule,

@@ -1,56 +1,56 @@
-<div class="container-lg p-4" *ngIf="!authService.isActivating && !authService.loggedIn">
+<div *ngIf="!authService.isActivating && !authService.loggedIn" class="container-lg p-4">
     <app-auth></app-auth>
 </div>
 
-<div class="container-lg p-4" *ngIf="authService.isActivating && !authService.loggedIn">
+<div *ngIf="authService.isActivating && !authService.loggedIn" class="container-lg p-4">
     <app-activate></app-activate>
 </div>
 
-<div class="container-lg p-4" *ngIf="authService.loggedIn">
+<div *ngIf="authService.loggedIn" class="container-lg p-4">
     <div class="top-menu-container">
-            <a class="top-logo" routerLink="/">
-                Casper Metrics Admin Dashboard
-            </a>
-            <a class="top-menu-link" routerLinkActive="active" routerLink="/signout">
-                <i class="fas fa-sign-out-alt"></i>
-                Sign&nbsp;Out
-            </a>
+        <a class="top-logo" routerLink="/">
+            Casper Metrics Admin Dashboard
+        </a>
+        <a class="top-menu-link" routerLink="/signout" routerLinkActive="active">
+            <i class="fas fa-sign-out-alt"></i>
+            Sign&nbsp;Out
+        </a>
 
-            <div class="top-menu-link ms-5">
-                <i>
-                    {{ authService?.user?.firstName }}
-                    {{ authService?.user?.lastName }}
-                </i>
-            </div>
+        <div class="top-menu-link ms-5">
+            <i>
+                {{ authService?.user?.firstName }}
+                {{ authService?.user?.lastName }}
+            </i>
+        </div>
 
-            <a *ngIf="authService.user.role === 'administrator'"
-               class="top-menu-link" routerLinkActive="active" routerLink="/users">
-                <i class="fas fa-users"></i>
-                Users
-            </a>
+        <a *ngIf="authService.user.role === 'administrator'"
+           class="top-menu-link" routerLink="/users" routerLinkActive="active">
+            <i class="fas fa-users"></i>
+            Users
+        </a>
 
-            <a class="top-menu-link" routerLinkActive="active" routerLink="/logs">
-                <i class="fas fa-users"></i>
-                Logs
-            </a>
+        <a class="top-menu-link" routerLink="/logs" routerLinkActive="active">
+            <i class="fas fa-history"></i>
+            Logs
+        </a>
     </div>
     <div class="menu-container">
         <ul class="nav nav-tabs">
             <li class="nav-item me-4">
-                <a class="nav-link" routerLinkActive="active" routerLink="/"
-                   [routerLinkActiveOptions]="{ exact: true }">
-                    <i class="fas fa-globe-americas"></i>
-                    Overview
+                <a [routerLinkActiveOptions]="{ exact: true }" class="nav-link" routerLink="/"
+                   routerLinkActive="active">
+                    <i class="fas fa-stamp"></i>
+                    Approval
                 </a>
             </li>
-            <li class="nav-item" *ngFor="let vault of vaults">
-                <a class="nav-link" routerLinkActive="active" [routerLink]="'/account/' + vault.from">
+            <li *ngFor="let vault of vaults" class="nav-item">
+                <a [routerLink]="'/account/' + vault.from" class="nav-link" routerLinkActive="active">
                     <i class="fas fa-wallet"></i>
                     {{ vault.name }}
                 </a>
             </li>
             <li class="nav-item ms-4">
-                <a class="nav-link" routerLinkActive="active" routerLink="/stake-unlock">
+                <a class="nav-link" routerLink="/stake-unlock" routerLinkActive="active">
                     <i class="fas fa-lock-open"></i>
                     Stake&nbsp;Unlock
                 </a>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiClientService } from './api-client.service';
 import { take } from 'rxjs/operators';
-import { JwtHelperService } from "@auth0/angular-jwt"
 import { Router } from "@angular/router";
 
 @Injectable( {
@@ -9,17 +8,35 @@ import { Router } from "@angular/router";
 } )
 export class AuthService {
 
+    public static access_token = localStorage.getItem( 'access_token' );
     public loggedIn = false;
     public isActivating = false;
     public errorMessage: string;
     public user: any;
-    public static access_token = localStorage.getItem( 'access_token' );
+    public status = false;
     private _authTimer: number;
 
     constructor(
         private _apiClientService: ApiClientService,
         private _router: Router,
     ) {
+        setInterval( () => {
+            this.checkStatus();
+        }, 3000 );
+    }
+
+    public checkStatus(): void {
+        if ( !this.loggedIn || !this.user || this.user.role === 'viewer' ) {
+            return;
+        }
+        this._apiClientService.get(
+            'transfers/status',
+        ).pipe( take( 1 ) )
+            .subscribe(
+                result => {
+                    this.status = !!result;
+                }
+            );
     }
 
     public authByToken( token: string ): void {
@@ -31,6 +48,7 @@ export class AuthService {
                     this.loggedIn = true;
                     this.user = result;
                     this._recheckAuth();
+                    this.checkStatus();
                 },
                 error => {
                     if (
@@ -90,7 +108,9 @@ export class AuthService {
         clearTimeout( this._authTimer );
         if ( AuthService.access_token ) {
             this._authTimer = setTimeout(
-                () => { this.authByToken( AuthService.access_token ); },
+                () => {
+                    this.authByToken( AuthService.access_token );
+                },
                 60000
             )
         }

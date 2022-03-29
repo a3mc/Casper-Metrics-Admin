@@ -1,29 +1,29 @@
 <form (submit)="signIn()"
-      [class.mt-5]="!authService.errorMessage" class="form sign-in-form"
-      [formGroup]="userForm">
+      [class.mt-5]="!authService.errorMessage" [formGroup]="userForm"
+      class="form sign-in-form">
     <div *ngIf="authService.errorMessage" class="form-group alert alert-danger error-message mb-3">
         {{ authService.errorMessage }}
     </div>
 
     <div class="form-group">
-        <label for="userEmail" class="mt-3">Email</label>
-        <input formControlName="UserEmail" id="userEmail" maxlength="128" [email]="true"
-               class="form-control" required type="email" name="email"
-               [class.is-invalid]="userForm.controls.UserEmail.touched && userForm.controls.UserEmail.invalid">
+        <label class="mt-3" for="userEmail">Email</label>
+        <input [class.is-invalid]="userForm.controls.UserEmail.touched && userForm.controls.UserEmail.invalid" [email]="true" class="form-control" formControlName="UserEmail"
+               id="userEmail" maxlength="128" name="email" required
+               type="email">
     </div>
 
     <div class="form-group">
-        <label for="userPassword" class="mt-3">Password</label>
-        <input formControlName="UserPassword" id="userPassword" minlength="8" maxlength="128"
-               class="form-control" required type="password" name="password"
-               [class.is-invalid]="userForm.controls.UserPassword.touched && userForm.controls.UserPassword.invalid">
+        <label class="mt-3" for="userPassword">Password</label>
+        <input [class.is-invalid]="userForm.controls.UserPassword.touched && userForm.controls.UserPassword.invalid" class="form-control" formControlName="UserPassword" id="userPassword"
+               maxlength="128" minlength="8" name="password" required
+               type="password">
     </div>
 
     <div class="form-group">
-        <label for="faCode" class="mt-3">2FA Code</label>
-        <input formControlName="FaCode" id="faCode" minlength="6" maxlength="6"
-               class="form-control" name="faCode" required
-               [class.is-invalid]="userForm.controls.FaCode.touched && userForm.controls.FaCode.invalid">
+        <label class="mt-3" for="faCode">2FA Code</label>
+        <input [class.is-invalid]="userForm.controls.FaCode.touched && userForm.controls.FaCode.invalid" class="form-control" formControlName="FaCode" id="faCode"
+               maxlength="6" minlength="6" name="faCode"
+               required>
     </div>
 
     <div class="form-group mt-3">

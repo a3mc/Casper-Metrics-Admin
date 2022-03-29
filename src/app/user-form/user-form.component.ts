@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output,  EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { ApiClientService } from '../services/api-client.service';
@@ -24,6 +24,12 @@ export class UserFormComponent implements OnInit {
         'administrator',
     ];
 
+    constructor(
+        public authService: AuthService,
+        private _apiClientService: ApiClientService,
+    ) {
+    }
+
     get email(): AbstractControl {
         return this.userForm.get( 'UserEmail' );
     }
@@ -42,12 +48,6 @@ export class UserFormComponent implements OnInit {
 
     get active(): AbstractControl {
         return this.userForm.get( 'Active' );
-    }
-
-    constructor(
-        public authService: AuthService,
-        private _apiClientService: ApiClientService,
-    ) {
     }
 
     ngOnInit(): void {

@@ -6,7 +6,7 @@ import { AccountComponent } from "./account/account.component";
 import { StakeUnlockComponent } from "./stake-unlock/stake-unlock.component";
 import { SignoutComponent } from "./signout/signout.component";
 import { UsersComponent } from './users/users.component';
-import { ActivateComponent } from './activate/activate.component';
+import { LogsComponent } from "./logs/logs.component";
 
 const routes: Routes = [
     {
@@ -36,6 +36,11 @@ const routes: Routes = [
             {
                 path: 'users',
                 component: UsersComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'logs',
+                component: LogsComponent,
                 pathMatch: 'full'
             }
         ]
