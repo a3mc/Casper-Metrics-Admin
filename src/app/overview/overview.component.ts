@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiClientService } from "../services/api-client.service";
 import { take } from "rxjs/operators";
 
@@ -7,13 +7,11 @@ import { take } from "rxjs/operators";
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.scss']
 } )
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
 
     public circulatingSupply = 0;
     public totalSupply = 0;
     public validatorsWeight = 0;
-    public searchTerm: string = null;
-    public showSearchTerm = false;
 
     constructor(
         private _apiClientService: ApiClientService,
@@ -28,11 +26,12 @@ export class OverviewComponent implements OnInit {
                 this.totalSupply = result[0].totalSupply;
                 this.validatorsWeight = result[0].validatorsWeights;
             } );
+
+        document.body.style.backgroundColor = '#dbd9ce';
     }
 
-    public searchChanged(): void {
-        this.showSearchTerm = false;
-        setTimeout( () => this.showSearchTerm = true );
+    ngOnDestroy(): void  {
+        document.body.style.backgroundColor = 'inherit';
     }
 
 }

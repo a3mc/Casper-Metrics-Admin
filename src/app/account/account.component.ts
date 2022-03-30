@@ -24,7 +24,6 @@ export interface TransfersResponse {
     styleUrls: ['./account.component.scss']
 } )
 export class AccountComponent implements OnInit {
-    @Input( 'searchTerm' ) search?: string;
     @Input( 'overview' ) overview?: boolean;
 
     @ViewChild( TreeComponent ) tree;
@@ -73,11 +72,7 @@ export class AccountComponent implements OnInit {
                 }
             } );
             if ( !params.keys.length ) {
-                if ( this.search && this.search.length ) {
-                    this.searchTerm();
-                } else {
-                    this.approvedTransfers();
-                }
+                this.approvedTransfers();
             }
         } );
     }
@@ -103,7 +98,7 @@ export class AccountComponent implements OnInit {
     public showTree(): void {
         this.data = null;
         this._apiClientService.get(
-            'transfers'
+            'transfers_tree'
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -152,21 +147,6 @@ export class AccountComponent implements OnInit {
                     console.error( error );
                 }
             );
-    }
-
-    public searchTerm() {
-        this._apiClientService.get(
-            'transfers?search=' + this.search
-        )
-            .pipe( take( 1 ) )
-            .subscribe( ( result: any ) => {
-                this.totalItems = result.totalItems.count;
-                this.totalApproved = result.approvedSum;
-                this.allTransfers = result.data;
-                this.allTransferSum = result.totalSum;
-                this.editTransfers( this.allTransfers, 'approved' )
-            } );
-
     }
 
     public selectNode( nodePair ): void {
@@ -316,6 +296,10 @@ export class AccountComponent implements OnInit {
         }, 3000 );
     }
 
+    public checkSelected(): void {
+        this.allSelected = !! this.transfers.every( transfer => transfer.selected );
+    }
+
     public save(): void {
         this.isSaving = true;
         const approved: string = this.transfers.filter( transfer => transfer.selected ).map(
@@ -331,7 +315,7 @@ export class AccountComponent implements OnInit {
                 ( result ) => {
                     this.message = {
                         type: 'success',
-                        text: 'Saved successfully.',
+                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
                     }
                     this.isSaving = false;
                     this.transfers.forEach( transfer => {

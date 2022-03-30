@@ -12,18 +12,4 @@
         <h4 class="approved-header mt-5">Transfers</h4>
         <app-account [overview]="true"></app-account>
     </div>
-    <div class="mt-5">
-        <h3 class="mb-2 mt-5 pt-5">Search TXs by Deploy hashes or Account addresses</h3>
-        <div class="form-group mt-3">
-            <label class="d-block" for="deploy-hash">
-                Search:
-            </label>
-            <input (ngModelChange)="searchChanged()" [(ngModel)]="searchTerm" class="form-control" id="search-term"
-                   name="searchTerm"/>
-        </div>
-
-        <div style="min-height: 300px">
-            <app-account *ngIf="searchTerm && showSearchTerm" [searchTerm]="searchTerm"></app-account>
-        </div>
-    </div>
 </div>

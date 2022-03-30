@@ -4,7 +4,7 @@
             <div class="col-sm-6">
                 <h4>Manage Users</h4>
                 <button (click)="addNewUser()" class="mt-2 btn btn-primary btn-success">Add New</button>
-                <div *ngIf="users?.length" class="mt-5">
+                <div *ngIf="users?.length" class="mt-5 mb-4">
                     <div *ngFor="let user of users; let i = index" class="mt-3">
                         <a (click)="setUser( user )" [class.text-muted]="!user.active" class="user-link">
                             {{ i + 1  }}.
@@ -13,6 +13,9 @@
                         </a>
                     </div>
                 </div>
+                <a (click)="getUsers()" class="btn btn-link">
+                    Reload list
+                </a>
             </div>
             <div *ngIf="selectedUser" class="col-sm-6">
                 <app-user-form (updated)="userUpdated()" [user]="selectedUser"></app-user-form>

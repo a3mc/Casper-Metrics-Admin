@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiClientService } from './api-client.service';
 import { take } from 'rxjs/operators';
 import { Router } from "@angular/router";
+import Swal from "sweetalert2";
 
 @Injectable( {
     providedIn: 'root'
@@ -44,7 +45,23 @@ export class AuthService {
             'me',
         ).pipe( take( 1 ) )
             .subscribe(
-                result => {
+                ( result: any ) => {
+                    if ( this.user && result.role && this.user.role !== result.role ) {
+                        console.warn( 'User role has been changed.' );
+                        Swal.fire( {
+                            title: 'Attention!',
+                            text: 'You user role was changed by the admin. Please log in again.',
+                            icon: 'warning',
+                            confirmButtonText: 'Ok',
+                            showCancelButton: false
+                        } ).then(
+                            () => {
+                                this.signOut();
+                            }
+                        );
+                        return;
+                    }
+
                     this.loggedIn = true;
                     this.user = result;
                     this._recheckAuth();
@@ -111,7 +128,7 @@ export class AuthService {
                 () => {
                     this.authByToken( AuthService.access_token );
                 },
-                60000
+                30000
             )
         }
 

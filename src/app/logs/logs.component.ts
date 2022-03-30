@@ -53,7 +53,14 @@ export class LogsComponent implements OnInit {
             .subscribe(
                 ( result: any ) => {
                     if ( result.extra ) {
-                        result.extra = result.extra.split( ';' );
+                        const extra = result.extra.split( ';' ).map( item => {
+                            return {
+                                hash: item.split( '|' )[0],
+                                value: item.split( '|' )[1]
+                            }
+                        } );
+
+                        result.extra = extra;
                         this.logs[i] = result;
                     }
                 }
@@ -69,7 +76,7 @@ export class LogsComponent implements OnInit {
     }
 
     public downloadFile( data: any ): any {
-        const csv = ['Deploy Hash', ...data];
+        const csv = ['Deploy Hash, CSPR', ...data.map( item => item.hash + ',' + item.value )];
         const csvArray = csv.join( '\r\n' );
         const blob = new Blob( [csvArray], { type: 'text/csv' } )
         saveAs( blob, 'deploy_hashes.csv' );

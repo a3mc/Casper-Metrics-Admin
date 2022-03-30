@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._getUsers();
+        this.getUsers();
     }
 
     public addNewUser(): void {
@@ -38,10 +38,10 @@ export class UsersComponent implements OnInit {
     }
 
     public userUpdated(): void {
-        this._getUsers();
+        this.getUsers();
     }
 
-    private _getUsers(): void {
+    public getUsers(): void {
         this._apiClientService.get( 'users' ).pipe( take( 1 ) )
             .subscribe(
                 result => {
