@@ -26,6 +26,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { ActivateComponent } from './activate/activate.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { LogsComponent } from './logs/logs.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule( {
     declarations: [
@@ -39,7 +40,8 @@ import { LogsComponent } from './logs/logs.component';
         UserFormComponent,
         UsersComponent,
         ActivateComponent,
-        LogsComponent
+        LogsComponent,
+        SearchComponent,
     ],
     imports: [
         BrowserModule,

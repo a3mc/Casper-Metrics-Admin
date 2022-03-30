@@ -1,0 +1,82 @@
+.search {
+	margin-top: 100px;
+}
+
+#search-term {
+	display: inline-block;
+}
+.search-button {
+	padding: 5px 13px;
+	font-size: 16px;
+	margin-left: -45px;
+	margin-top: -2px;
+}
+
+.review {
+	display: block;
+	margin-top: 80px;
+
+	.right {
+		text-align: right;
+	}
+
+	button {
+		width: 120px;
+		text-align: center;
+	}
+
+	button.btn-close {
+		width: 24px;
+		float: right;
+		margin-top: -35px;
+		margin-right: -35px;
+	}
+
+	.review-details {
+		> div {
+			white-space: nowrap;
+		}
+
+		.fa-clipboard {
+			margin-left: 3px;
+			font-size: 0.8em;
+			cursor: pointer;
+		}
+	}
+
+	.per-page {
+		margin-left: 20px;
+		width: 80px;
+		padding: 3px;
+	}
+
+	.block-height-cell,
+	.checkbox-cell {
+		width: 1%;
+		min-width: 0;
+		white-space: nowrap;
+	}
+
+	td .fa-clipboard {
+		cursor: pointer;
+		font-size: 0.8em;
+		position: relative;
+		top: -2px;
+	}
+
+	.to {
+		color: green;
+	}
+
+	.from {
+		color: red;
+	}
+
+	.set-name {
+		margin-left: 20px;
+	}
+
+	tfoot.total {
+		font-weight: bold;
+	}
+}

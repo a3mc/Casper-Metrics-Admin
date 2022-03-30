@@ -39,10 +39,12 @@
                     <td colspan="4" class="ps-5 pb-5">
                         <h5>Deploy hashes:</h5>
                         <ng-container *ngIf="log.extra.length && log.extra.length < 100; else downloadMessage">
-                            <div *ngFor="let hash of log.extra">
-                                {{ hash }}
-                                <i (cbOnSuccess)="copied($event)" cbContent="{{ hash }}" class="far fa-clipboard"
+                            <div *ngFor="let extra of log.extra">
+                                {{ extra.hash }}
+                                <i (cbOnSuccess)="copied($event)" cbContent="{{ extra.hash }}" class="far fa-clipboard"
                                    ngxClipboard></i>
+                                &nbsp;&nbsp;
+                                ({{ extra.value }} CSPR)
                             </div>
                         </ng-container>
                         <ng-template #downloadMessage>

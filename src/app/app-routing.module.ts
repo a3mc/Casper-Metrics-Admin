@@ -7,6 +7,7 @@ import { StakeUnlockComponent } from "./stake-unlock/stake-unlock.component";
 import { SignoutComponent } from "./signout/signout.component";
 import { UsersComponent } from './users/users.component';
 import { LogsComponent } from "./logs/logs.component";
+import { SearchComponent } from "./search/search.component";
 
 const routes: Routes = [
     {
@@ -16,6 +17,11 @@ const routes: Routes = [
             {
                 path: '',
                 component: OverviewComponent,
+                pathMatch: 'full',
+            },
+            {
+                path: 'search',
+                component: SearchComponent,
                 pathMatch: 'full',
             },
             {

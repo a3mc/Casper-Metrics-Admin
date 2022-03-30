@@ -77,19 +77,21 @@ export class UserFormComponent implements OnInit {
             cancelButtonText: 'Cancel',
             showCancelButton: true
         } ).then(
-            () => {
-                this._apiClientService.post( 'users/' + this.user.id + '/reset', null )
-                    .pipe( take( 1 ) )
-                    .subscribe(
-                        result => {
-                            this.errorMessage = null;
-                            this.showSuccess = true;
-                            this.updated.emit();
-                        },
-                        error => {
-                            this.errorMessage = error?.error?.error?.message || 'Error reseting user profile';
-                        }
-                    )
+            ( result ) => {
+                if ( result.isConfirmed ) {
+                    this._apiClientService.post( 'users/' + this.user.id + '/reset', null )
+                        .pipe( take( 1 ) )
+                        .subscribe(
+                            result => {
+                                this.errorMessage = null;
+                                this.showSuccess = true;
+                                setTimeout( () => { this.updated.emit(); }, 2000 );
+                            },
+                            error => {
+                                this.errorMessage = error?.error?.error?.message || 'Error reseting user profile';
+                            }
+                        );
+                }
             }
         )
     }
@@ -103,19 +105,22 @@ export class UserFormComponent implements OnInit {
             cancelButtonText: 'Cancel',
             showCancelButton: true
         } ).then(
-            () => {
-                this._apiClientService.post( 'users/' + this.user.id + '/deactivate', null )
-                    .pipe( take( 1 ) )
-                    .subscribe(
-                        result => {
-                            this.errorMessage = null;
-                            this.showSuccess = true;
-                            this.updated.emit();
-                        },
-                        error => {
-                            this.errorMessage = error?.error?.error?.message || 'Error deactivating user profile';
-                        }
-                    )
+            ( result ) => {
+                if ( result.isConfirmed ) {
+                    this._apiClientService.post( 'users/' + this.user.id + '/deactivate', null )
+                        .pipe( take( 1 ) )
+                        .subscribe(
+                            result => {
+                                this.errorMessage = null;
+                                this.showSuccess = true;
+                                setTimeout( () => { this.updated.emit(); }, 2000 );
+                            },
+                            error => {
+                                this.errorMessage = error?.error?.error?.message || 'Error deactivating user profile';
+                            }
+                        );
+                }
+
             }
         )
     }
@@ -126,7 +131,7 @@ export class UserFormComponent implements OnInit {
                 result => {
                     this.errorMessage = null;
                     this.showSuccess = true;
-                    this.updated.emit();
+                    setTimeout( () => { this.updated.emit(); }, 2000 );
                 },
                 error => {
                     this.errorMessage = 'Error creating user!'
@@ -141,7 +146,8 @@ export class UserFormComponent implements OnInit {
                 result => {
                     this.errorMessage = null;
                     this.showSuccess = true;
-                    this.updated.emit();
+                    setTimeout( () => { this.updated.emit(); }, 2000 );
+
                 },
                 error => {
                     this.errorMessage = error?.error?.error?.message || 'Error updating profile!';

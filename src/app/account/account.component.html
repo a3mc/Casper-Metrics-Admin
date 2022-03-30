@@ -133,7 +133,8 @@
                 paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
                 let i = index">
                 <td class="checkbox-cell">
-                    <input (click)="message = null" [(ngModel)]="transfer.selected" [disabled]="authService?.user?.role === 'viewer'"
+                    <input (change)="message = null; this.checkSelected();" [(ngModel)]="transfer.selected"
+                           [disabled]="authService?.user?.role === 'viewer'"
                            [hidden]="overview"
                            type="checkbox">
                 </td>
@@ -170,27 +171,7 @@
                 </td>
             </tr>
             </tbody>
-            <tbody *ngIf="totalItems > perPage && tab !== 'previous'" class="text-muted">
-            <tr>
-                <th [attr.colspan]="tab === 'approved' ? 6 : 5" class="right">
-                    <b>THIS PAGE</b>
-                </th>
-                <td></td>
-            </tr>
-            <tr>
-                <td [attr.colspan]="tab === 'approved' ? 6 : 5" class="right">
-                    Total (CSPR):
-                </td>
-                <td class="right">{{ transfersSum | number:'1.0-0' }}</td>
-            </tr>
-            </tbody>
             <tfoot class="total">
-            <tr *ngIf="totalItems > perPage && tab !== 'previous'">
-                <th [attr.colspan]="tab === 'approved' ? 6 : 5" class="right">
-                    <b>TOTAL</b>
-                </th>
-                <td></td>
-            </tr>
             <tr *ngIf="tab !== 'approved' || search">
                 <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
                     Total (CSPR):

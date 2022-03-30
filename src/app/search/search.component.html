@@ -1,0 +1,169 @@
+<div class="search mt-5">
+    <h3 class="mb-2 mt-5 pt-5">Search TXs by Deploy hashes or Account addresses</h3>
+    <div class="form-group mt-3">
+        <label class="d-block" for="deploy-hash">
+            Search:
+        </label>
+        <input [(ngModel)]="searchTerm" class="form-control" id="search-term"
+               name="searchTerm" (keyup.enter)="searchChanged()">
+
+        <button class="btn btn-success search-button" (click)="searchChanged()"
+                [disabled]="!searchTerm || searchTerm.length < 64"
+                [class.disabled]="!searchTerm || searchTerm.length < 64">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+
+    <div class="card review p-5" *ngIf="searchPerformed">
+        <div class="card-title">
+            <h3 class="mb-4">
+                Found Transactions
+            </h3>
+            <ul class="nav nav-tabs" *ngIf="tab !== 'deploy'">
+                <li class="nav-item">
+                    <a (click)="setInbound()" [class.active]="tab === 'inbound'" class="nav-link to">
+                        All Inbound
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a (click)="setOutbound()" [class.active]="tab === 'outbound'" class="nav-link from">
+                        All Outbound
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="!transfers?.length" class="alert alert-warning">
+            No transactions found.
+        </div>
+
+        <table *ngIf="transfers?.length" class="table">
+            <thead>
+            <tr>
+                <th class="checkbox-cell" scope="col">
+                    <input (click)="selectAll()" [disabled]="authService?.user?.role === 'viewer'"
+                           [ngModel]="allSelected" type="checkbox">
+                </th>
+                <th scope="col">Block</th>
+                <th scope="col">Date</th>
+                <th scope="col">Deploy Hash</th>
+                <th *ngIf="tab === 'inbound' || tab === 'deploy'" scope="col">From</th>
+                <th *ngIf="tab === 'outbound' || tab === 'deploy'" scope="col">To</th>
+                <th class="amount-cell right" scope="col">Amount</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transfer of transfers|
+                paginate: { itemsPerPage: perPage, currentPage: page, totalItems: totalItems, id: 'pagination' };
+                let i = index">
+                <td class="checkbox-cell">
+                    <input (change)="message = null; this.checkSelected(); this.touched( i )"
+                           [(ngModel)]="transfer.approved"
+                           [disabled]="authService?.user?.role === 'viewer'"
+                           type="checkbox">
+                </td>
+                <td>{{ transfer.blockHeight }}</td>
+                <td>{{ transfer.timestamp | date: 'medium' }}</td>
+                <td>
+                    {{ transfer.deployHash.substr(0, 8) + '&hellip;' + transfer.deployHash.substr(-8, 8) }}
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.deployHash }}" class="far fa-clipboard"
+                       ngxClipboard></i>
+                </td>
+                <td *ngIf="tab === 'inbound' || tab === 'deploy'">
+                        <span *ngIf="transfer.from">
+                            {{ transfer.from.substr(0, 8) + '&hellip;' + transfer.from.substr(-8, 8) }}
+                        </span>
+                    <span *ngIf="!transfer.from">
+                             {{ transfer.fromHash.substr(0, 17) + '&hellip;' + transfer.fromHash.substr(-4, 4) }}
+                        </span>
+
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.from || transfer.fromHash }}"
+                       class="far fa-clipboard"
+                       ngxClipboard></i>
+                </td>
+                <td *ngIf="tab === 'outbound' || tab === 'deploy'">
+                         <span *ngIf="transfer.to">
+                            {{ transfer.to.substr(0, 8) + '&hellip;' + transfer.to.substr(-8, 8) }}
+                         </span>
+                    <span *ngIf="!transfer.to">
+                            {{ transfer.toHash.substr(0, 17) + '&hellip;' + transfer.toHash.substr(-4, 4) }}
+                         </span>
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.to || transfer.toHash }}"
+                       class="far fa-clipboard"
+                       ngxClipboard></i>
+                </td>
+                <td class="right amount-cell">
+                    {{ transfer.amount / 1000000000 | number:'1.0-2' }}
+                </td>
+            </tr>
+            </tbody>
+            <tfoot class="total">
+            <tr>
+                <td [attr.colspan]="tab === 'deploy' ? 6 : 5" class="right">
+                    Total (CSPR):
+                </td>
+                <td class="right">{{ allTransferSum  | number:'1.0-0' }}</td>
+            </tr>
+            <tr>
+
+                <td [attr.colspan]="tab === 'deploy' ? 6 : 5" class="right">
+                    Include in Circulating Supply (CSPR):
+                </td>
+                <td class="right">
+                    {{ countApproved() | number:'1.0-0' }}
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <div class="row">
+            <div class="col-sm-4 form-group pt-4">
+                <label>Per page</label>
+                <select (change)="perPageChanged()" [(ngModel)]="perPage" class="per-page" name="per-page">
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                </select>
+            </div>
+            <div class="col-sm-8 pt-4 right" *ngIf="totalItems > perPage">
+                <pagination-controls (pageBoundsCorrection)="pageChanged( $event )"
+                                     (pageChange)="pageChanged( $event )"
+                                     autoHide="true"
+                                     directionLinks="true"
+                                     id="pagination"
+                                     maxSize="9"
+                                     nextLabel="Next"
+                                     previousLabel="Previous"
+                                     responsive="true"
+                                     screenReaderCurrentLabel="You're on page"
+                                     screenReaderPageLabel="page"
+                                     screenReaderPaginationLabel="Pagination">
+                </pagination-controls>
+            </div>
+        </div>
+
+        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+            <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
+                 [class.alert-info]="!message.type"
+                 [class.alert-success]="message.type === 'success'"
+                 [class.alert-warning]="message.type === 'warning'"
+                 class="alert">
+                {{ message.text }}
+            </div>
+            <div *ngIf="authService.status" class="alert alert-warning">
+                Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
+            </div>
+            <button (click)="save()"
+                    [class.btn-disabled]="isSaving || authService.status"
+                    [disabled]="isSaving || authService.status"
+                    class="btn btn-lg btn-success">
+                Save
+            </button>
+        </div>
+
+    </div>
+</div>
