@@ -19,7 +19,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this._apiClientService.get( 'era' )
+        this._apiClientService.get( 'era', null, true )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
                 this.circulatingSupply = result[0].circulatingSupply;
