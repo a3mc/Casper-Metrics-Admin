@@ -10,6 +10,7 @@ const httpOptions = {
 @Injectable()
 export class ApiClientService {
     private _baseUrl = environment.apiMainnetUrl;
+    private _baseFrontUrl = environment.apiMainnetFrontUrl;
 
     constructor(
         private _httpClient: HttpClient
@@ -26,8 +27,8 @@ export class ApiClientService {
         return this._httpClient.patch<any>( url, body, httpOptions );
     }
 
-    public get( endpoint: any, params: any[] = null ) {
-        let url = this._baseUrl + endpoint;
+    public get( endpoint: any, params: any[] = null, front = false ) {
+        let url = ( front ? this._baseFrontUrl : this._baseUrl ) + endpoint;
 
         if ( endpoint.match( /^https/ ) ) {
             url = endpoint;
