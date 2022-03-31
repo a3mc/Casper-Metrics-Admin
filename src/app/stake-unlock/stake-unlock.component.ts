@@ -14,7 +14,7 @@ export class StakeUnlockComponent implements OnInit {
     public unlock90 = 0;
     public unlock365 = 0;
     public message: Message;
-    public isCalculating = false;
+    public isSaving = false;
 
     constructor(
         public authService: AuthService,
@@ -23,6 +23,7 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.isSaving = false;
         this._apiClientService.get( 'validators-unlock' )
             .subscribe(
                 ( result: ArrayBuffer ) => {
@@ -33,11 +34,10 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public save(): void {
-        this.isCalculating = true;
+        this.authService.status = true;
         this._apiClientService.post( 'validators-unlock?amount=' + this.unlock365, null )
             .subscribe(
-                () => {
-                },
+                () => {},
                 ( error ) => {
                     this.message = {
                         type: 'error',
