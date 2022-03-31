@@ -23,7 +23,7 @@ export class AuthService {
     ) {
         setInterval( () => {
             this.checkStatus();
-        }, 3000 );
+        }, 5000 );
     }
 
     public checkStatus(): void {
