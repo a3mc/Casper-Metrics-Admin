@@ -12,6 +12,15 @@
 	margin-top: -2px;
 }
 
+.nav-item {
+	cursor: pointer;
+}
+
+.sortable {
+	border-bottom: 1px dashed #999;
+	cursor: pointer;
+}
+
 .review {
 	display: block;
 	margin-top: 80px;

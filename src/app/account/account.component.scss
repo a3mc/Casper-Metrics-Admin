@@ -51,6 +51,15 @@ tr.active {
 	cursor: pointer;
 }
 
+.sortable {
+	border-bottom: 1px dashed #999;
+	cursor: pointer;
+}
+
+.nav-item {
+	cursor: pointer;
+}
+
 .review {
 	display: block;
 	margin-top: 80px;

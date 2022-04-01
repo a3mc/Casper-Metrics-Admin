@@ -47,6 +47,8 @@ export class AccountComponent implements OnInit {
     public perPage = 15;
     public totalApproved = 0;
     public allTransferSum = 0;
+    public sortColumn = 'blockHeight';
+    public sortOrder = 'DESC';
 
     private _connectedTransactions;
 
@@ -123,7 +125,8 @@ export class AccountComponent implements OnInit {
 
     public approvedTransfers() {
         this._apiClientService.get(
-            'transfers?approved=1' + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?approved=1' + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -192,7 +195,8 @@ export class AccountComponent implements OnInit {
         this.tab = 'inbound';
         this.selectOnlyNode( [this.account.fromHash, this.account.toHash] );
         this._apiClientService.get(
-            'transfers?toHash=' + this.account.toHash + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?toHash=' + this.account.toHash + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -207,7 +211,8 @@ export class AccountComponent implements OnInit {
         this.selectOnlyNode( [this.account.fromHash, this.account.toHash] );
         this.tab = 'outbound';
         this._apiClientService.get(
-            'transfers?fromHash=' + this.account.toHash + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?fromHash=' + this.account.toHash + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -260,12 +265,32 @@ export class AccountComponent implements OnInit {
             return;
         }
         this.showTable = true;
-        transfers.sort( this._compare );
+
         if ( !tab ) {
             tab = 'previous';
         }
 
         if ( tab === 'previous' ) {
+            transfers.sort( ( a, b ) => {
+                if ( this.sortColumn === 'blockHeight' ) {
+                    if ( a.blockHeight > b.blockHeight ) {
+                        return this.sortOrder === 'DESC' ? -1 : 1;
+                    }
+                    if ( a.blockHeight < b.blockHeight ) {
+                        return this.sortOrder === 'DESC' ? 1 : -1;
+                    }
+                    return 0;
+                } else if ( this.sortColumn === 'denomAmount' ) {
+                    if ( a.denomAmount > b.denomAmount ) {
+                        return this.sortOrder === 'DESC' ? -1 : 1;
+                    }
+                    if ( a.denomAmount < b.denomAmount ) {
+                        return this.sortOrder === 'DESC' ? 1 : -1;
+                    }
+                    return 0;
+                }
+                return 0;
+            } );
             this.isGenesisAccount = false;
             this._connectedTransactions = transfers;
             this.account = transfers[0];
@@ -341,6 +366,29 @@ export class AccountComponent implements OnInit {
         this.unselectNode();
     }
 
+    public changeSort( column: string ): void {
+        if ( this.sortColumn === column ) {
+            if ( this.sortOrder === 'DESC' ) {
+                this.sortOrder = 'ASC';
+            } else {
+                this.sortOrder = 'DESC';
+            }
+        } else {
+            this.sortColumn = column;
+        }
+        this.page = 1;
+
+        if ( this.tab === 'approved' ) {
+            this.approvedTransfers();
+        } else if ( this.tab === 'previous' ) {
+            this.editTransfers( this.selectedTransfers, 'previous' );
+        } else if ( this.tab === 'inbound' ) {
+            this.setInbound();
+        } else if ( this.tab === 'outbound' ) {
+            this.setOutbound();
+        }
+    }
+
     private _getChildren( children ) {
 
         return children.reduce(
@@ -371,15 +419,5 @@ export class AccountComponent implements OnInit {
             },
             []
         ).filter( child => child.value > this.smallAmount );
-    }
-
-    private _compare( a, b ) {
-        if ( moment( a.timestamp ).isBefore( b.blockHeight ) ) {
-            return -1;
-        }
-        if ( moment( a.timestamp ).isAfter( b.blockHeight ) ) {
-            return 1;
-        }
-        return 0;
     }
 }
