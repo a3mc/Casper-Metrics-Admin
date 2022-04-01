@@ -120,12 +120,24 @@
                     <input (click)="selectAll()" [disabled]="authService?.user?.role === 'viewer'" [hidden]="overview"
                            [ngModel]="allSelected" type="checkbox">
                 </th>
-                <th scope="col">Block</th>
+                <th scope="col">
+                    <a (click)="changeSort( 'blockHeight' )">
+                        <span class="sortable me-1">Block</span>
+                        <i class="fa fa-sort-up" *ngIf="sortColumn === 'blockHeight' && sortOrder === 'ASC'"></i>
+                        <i class="fa fa-sort-down" *ngIf="sortColumn === 'blockHeight' && sortOrder === 'DESC'"></i>
+                    </a>
+                </th>
                 <th scope="col">Date</th>
                 <th scope="col">Deploy Hash</th>
                 <th *ngIf="tab === 'inbound' || tab === 'approved'" scope="col">From</th>
                 <th *ngIf="tab === 'outbound' || tab === 'approved'" scope="col">To</th>
-                <th class="amount-cell right" scope="col">Amount</th>
+                <th class="amount-cell right" scope="col">
+                    <a (click)="changeSort( 'denomAmount' )">
+                        <span class="sortable me-1">Amount</span>
+                        <i class="fa fa-sort-up" *ngIf="sortColumn === 'denomAmount' && sortOrder === 'ASC'"></i>
+                        <i class="fa fa-sort-down" *ngIf="sortColumn === 'denomAmount' && sortOrder === 'DESC'"></i>
+                    </a>
+                </th>
             </tr>
             </thead>
             <tbody>

@@ -23,6 +23,8 @@ export class SearchComponent implements OnInit {
     public totalApproved = 0;
     public allTransferSum = 0;
     public isSaving = false;
+    public sortColumn = 'blockHeight';
+    public sortOrder = 'DESC';
 
     constructor(
         public authService: AuthService,
@@ -53,6 +55,27 @@ export class SearchComponent implements OnInit {
         }
     }
 
+    public changeSort( column: string ): void {
+        if ( this.sortColumn === column ) {
+            if ( this.sortOrder === 'DESC' ) {
+                this.sortOrder = 'ASC';
+            } else {
+                this.sortOrder = 'DESC';
+            }
+        } else {
+            this.sortColumn = column;
+        }
+        this.page = 1;
+
+        if ( this.tab === 'deploy' ) {
+            this.getDeploy();
+        } else if ( this.tab === 'inbound' ) {
+            this.getInbound();
+        } else if ( this.tab === 'outbound' ) {
+            this.getOutbound();
+        }
+    }
+
     public setDeploy(): void {
         this._reset();
         this.tab = 'deploy';
@@ -73,7 +96,8 @@ export class SearchComponent implements OnInit {
 
     public getInbound(): void {
         this._apiClientService.get(
-            'transfers?toHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?toHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -89,7 +113,8 @@ export class SearchComponent implements OnInit {
 
     public getOutbound(): void {
         this._apiClientService.get(
-            'transfers?fromHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?fromHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -105,7 +130,8 @@ export class SearchComponent implements OnInit {
 
     public getDeploy(): void {
         this._apiClientService.get(
-            'transfers?deployHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page
+            'transfers?deployHash=' + this.searchTerm + '&perPage=' + this.perPage + '&page=' + this.page +
+            '&sort=' + this.sortColumn + ' ' + this.sortOrder
         )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
