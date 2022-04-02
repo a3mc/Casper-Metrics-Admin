@@ -159,23 +159,38 @@
             </div>
         </div>
 
-        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+        <div class="row">
             <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"
                  [class.alert-warning]="message.type === 'warning'"
-                 class="alert">
+                 class="alert mt-3">
                 {{ message.text }}
             </div>
-            <div *ngIf="authService.status" class="alert alert-warning">
+            <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
                 Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
             </div>
-            <button (click)="save()"
-                    [class.btn-disabled]="isSaving || authService.status"
-                    [disabled]="isSaving || authService.status"
-                    class="btn btn-lg btn-success">
-                Save
-            </button>
+
+            <div class="col">
+                <div *ngIf="authService?.user?.role !== 'viewer' && tab !== 'deploy'" class="pt-4">
+                    <button (click)="saveAll()" style="width:250px"
+                            [class.btn-disabled]="isSaving || authService.status"
+                            [disabled]="isSaving || authService.status"
+                            class="btn btn-lg btn-success">
+                        Save All {{ tab | titlecase }} TXs
+                    </button>
+                </div>
+            </div>
+            <div class="col">
+                <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+                    <button (click)="save()" style="width:200px"
+                            [class.btn-disabled]="isSaving || authService.status"
+                            [disabled]="isSaving || authService.status"
+                            class="btn btn-lg btn-success">
+                        Save&nbsp;Selected
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>

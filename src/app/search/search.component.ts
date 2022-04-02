@@ -231,6 +231,37 @@ export class SearchComponent implements OnInit {
                 } );
     }
 
+    public saveAll(): void {
+        if ( this.tab !== 'inbound' && this.tab !== 'outbound' ) {
+            console.error( 'Incorrect tab trying to save all' );
+            return;
+        }
+
+        this.transfers.forEach( transfer => transfer.approved = true );
+
+        this.isSaving = true;
+        const hash = this.tab === 'inbound' ? this.transfers[0].toHash : this.transfers[0].fromHash;
+
+        this._apiClientService.post( 'transfers/approve?' + this.tab + '=' + hash, {} )
+            .pipe( take( 1 ) )
+            .subscribe(
+                ( result ) => {
+                    this.message = {
+                        type: 'success',
+                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
+                    }
+                    this.isSaving = false;
+                },
+                ( error ) => {
+                    this.message = {
+                        type: 'error',
+                        text: 'Error updating records.',
+                    }
+                    this.isSaving = false;
+                    console.error( error );
+                } );
+    }
+
     private _reduceApprovedSum(): void {
         this.transfers.forEach( transfer => {
             transfer.selected = transfer.approved;
