@@ -172,7 +172,7 @@
             </div>
 
             <div class="col">
-                <div *ngIf="authService?.user?.role !== 'viewer' && tab !== 'deploy'" class="pt-4">
+                <div *ngIf="authService?.user?.role !== 'viewer' && tab !== 'deploy' && transfers.length" class="pt-4">
                     <button (click)="saveAll()" style="width:250px"
                             [class.btn-disabled]="isSaving || authService.status"
                             [disabled]="isSaving || authService.status"
@@ -182,7 +182,7 @@
                 </div>
             </div>
             <div class="col">
-                <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+                <div *ngIf="authService?.user?.role !== 'viewer' && transfers.length" class="pt-4 right">
                     <button (click)="save()" style="width:200px"
                             [class.btn-disabled]="isSaving || authService.status"
                             [disabled]="isSaving || authService.status"

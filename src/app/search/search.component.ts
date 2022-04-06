@@ -108,6 +108,10 @@ export class SearchComponent implements OnInit {
                 this.allTransferSum = result.totalSum;
                 this._reduceApprovedSum();
                 this.checkSelected();
+            }, error => {
+                console.warn( error );
+                this.searchPerformed = true;
+                this.transfers = [];
             } );
     }
 
@@ -125,6 +129,10 @@ export class SearchComponent implements OnInit {
                 this.allTransferSum = result.totalSum;
                 this._reduceApprovedSum();
                 this.checkSelected();
+            }, error => {
+                console.warn( error );
+                this.searchPerformed = true;
+                this.transfers = [];
             } );
     }
 
@@ -142,7 +150,11 @@ export class SearchComponent implements OnInit {
                 this.allTransferSum = result.totalSum;
                 this._reduceApprovedSum();
                 this.checkSelected();
-            } );
+            }, error => {
+            console.warn( error );
+                this.searchPerformed = true;
+            this.transfers = [];
+        } );
     }
 
     public selectAll(): void {
@@ -171,6 +183,7 @@ export class SearchComponent implements OnInit {
     }
 
     public pageChanged( page ): void {
+        this.message = null;
         this.page = page;
         this.allSelected = false;
         if ( this.tab === 'inbound' ) {
