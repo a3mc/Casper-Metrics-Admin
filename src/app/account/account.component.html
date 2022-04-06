@@ -48,7 +48,8 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.from || 'Unknown' }}
-                    <i (cbOnSuccess)="copied($event)" *ngIf="account.from" cbContent="{{ account.from }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.from" cbContent="{{ account.from }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </div>
                 <div class="ms-3">
@@ -64,7 +65,8 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </div>
                 <div class="ms-3">
@@ -81,7 +83,8 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </div>
                 <div class="ms-3">
@@ -98,7 +101,8 @@
                 </div>
                 <div class="ms-3">
                     Hex: {{ account.to || 'Unknown' }}
-                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" *ngIf="account.to" cbContent="{{ account.to }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </div>
                 <div class="ms-3">
@@ -165,7 +169,8 @@
                              {{ transfer.fromHash.substr(0, 17) + '&hellip;' + transfer.fromHash.substr(-4, 4) }}
                         </span>
 
-                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.from || transfer.fromHash }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.from || transfer.fromHash }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </td>
                 <td *ngIf="tab === 'outbound' || tab === 'approved'">
@@ -175,7 +180,8 @@
                     <span *ngIf="!transfer.to">
                             {{ transfer.toHash.substr(0, 17) + '&hellip;' + transfer.toHash.substr(-4, 4) }}
                          </span>
-                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.to || transfer.toHash }}" class="far fa-clipboard"
+                    <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.to || transfer.toHash }}"
+                       class="far fa-clipboard"
                        ngxClipboard></i>
                 </td>
                 <td class="right amount-cell">
@@ -230,7 +236,7 @@
             </div>
         </div>
 
-        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
+        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 row">
             <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"
@@ -241,16 +247,28 @@
             <div *ngIf="authService.status && (tab !== 'approved')" class="alert alert-warning">
                 Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
             </div>
-            <button (click)="cancel()" *ngIf="tab !== 'approved'"
-                    [class.btn-disabled]="isSaving" [disabled]="isSaving" class="btn btn-lg btn-warning me-3">
-                Cancel
-            </button>
-            <button (click)="save()" *ngIf="tab !== 'approved'"
-                    [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
-                    [disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
-                    class="btn btn-lg btn-success">
-                Save
-            </button>
+            <div class="col pt-4">
+                <button (click)="saveAll()" *ngIf="tab !== 'previous' && tab !== 'approved'"
+                        [class.btn-disabled]="isSaving || authService.status"
+                        [disabled]="isSaving || authService.status"
+                        class="btn btn-lg btn-success mt-3" style="width: 250px">
+                    Save All {{ tab | titlecase }} TXs
+                </button>
+            </div>
+            <div class="col pt-4">
+                <div class="pt-4 right">
+                    <button (click)="cancel()" *ngIf="tab !== 'approved'"
+                            [class.btn-disabled]="isSaving" [disabled]="isSaving" class="btn btn-lg btn-warning me-3">
+                        Cancel
+                    </button>
+                    <button (click)="save()" *ngIf="tab !== 'approved'"
+                            [class.btn-disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
+                            [disabled]="( countSelected() === countApproved() ) || isSaving || authService.status"
+                            class="btn btn-lg btn-success" style="width: 200px">
+                        Save&nbsp;Selected
+                    </button>
+                </div>
+            </div>
 
             <button (click)="calculate()" *ngIf="tab === 'approved'"
                     [class.btn-disabled]="authService.status"
@@ -262,7 +280,7 @@
                 <span *ngIf="!authService.status">Approve&nbsp;&amp; Calculate</span>
                 <span *ngIf="authService.status">Deploying&hellip;</span>
             </button>
-            <div *ngIf="tab === 'approved'" class="mt-2 text-muted">
+            <div *ngIf="tab === 'approved'" class="mt-2 text-muted right">
                 <small>
                     This will trigger the update in database and will take a few minutes to finish.<br>
                     After that, circulating supply will be updated on the API endpoints.<br>
