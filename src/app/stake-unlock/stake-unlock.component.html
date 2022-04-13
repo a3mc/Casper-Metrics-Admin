@@ -3,51 +3,117 @@
         <table class="table">
             <thead>
             <tr>
+                <th>Date (UTC)</th>
+                <th>Days from Genesis</th>
+                <th>Unlocked Amount</th>
                 <th>Total Locked</th>
                 <th>Total Unlocked</th>
-                <th>Unlocked in 90 days</th>
-                <th>Unlocked in 1 year</th>
-                <th>Days from Genesis</th>
+                <th></th>
             </tr>
             <tr>
-                <th>{{ locked | number:'1.0-2' }}</th>
-                <th>0</th>
+                <th></th>
                 <th>
-                    {{ locked - unlock365 | number:'1.0-2' }}
+                    0-89
                 </th>
                 <th>
-                    <input (ngModelChange)="unlock90 = locked - unlock365" [(ngModel)]="unlock365"
-                           [disabled]="authService?.user?.role === 'viewer'">
+                    0
                 </th>
-                <th>0</th>
+                <th>
+                    {{ locked | number:'1.0-2' }}
+                    <sup title="Initial validators weight">*</sup>
+                </th>
+                <th>
+                    0
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>
+                    90-103
+                </th>
+                <th>
+                    <input [(ngModel)]="unlock90" [disabled]="authService?.user?.role === 'viewer'"
+                        type="number" min="0" (keyup)="checkUnlock90Field()">
+                </th>
+                <th>
+                    {{ locked - unlock90 | number:'1.0-2' }}
+                </th>
+                <th>
+                    {{ unlock90 | number:'1.0-2' }}
+                </th>
+                <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="!expanded">
             <tr class="text-muted">
-                <td>{{ locked | number:'1.0-2' }}</td>
-                <td>0</td>
-                <td>0</td>
-                <td>{{ unlock365 | number:'1.0-2' }}</td>
-                <td>89</td>
+                <td colspan="7" class="right pb-4">
+                    <a class="btn btn-link" (click)="expanded = true">Expand 90-days schedule</a>
+                </td>
             </tr>
             </tbody>
-            <tbody>
+            <tbody *ngIf="expanded">
             <tr *ngFor="let unlockDate of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]"
                 [class.text-bold]="unlockDate === 14">
-                <td>{{ locked - (unlock90 / 14 * unlockDate) | number:'1.0-2' }}</td>
-                <td>{{ unlock90 / 14 * unlockDate | number:'1.0-2' }}</td>
-                <td>{{ unlock90 / 14 | number:'1.0-2' }}</td>
-                <td>0</td>
-                <td>{{ 89 + unlockDate }}</td>
+                <td></td>
+                <td>
+                    {{ 89 + unlockDate }}
+                </td>
+                <td>
+                    {{ unlock90 / 14 | number:'1.0-2' }}
+                </td>
+                <td>
+                    {{ locked - (unlock90 / 14 * unlockDate) | number:'1.0-2' }}
+                </td>
+                <td>
+                    {{ unlock90 / 14 * unlockDate | number:'1.0-2' }}
+                </td>
+                <td></td>
             </tr>
             </tbody>
             <tbody>
-            <tr class="text-bold">
-                <td>0</td>
-                <td>{{ locked - unlock90 | number:'1.0-2'}}</td>
-                <td>0</td>
-                <td>{{ locked - unlock90 | number:'1.0-2' }}</td>
-                <td>365</td>
+            <tr class="text-bold" *ngFor="let custom of customUnlocks; let i = index">
+                <td>{{ custom.date | date: 'medium' }}</td>
+                <td>
+                    {{ getDaysSinceGenesis( custom.date ) }}
+                </td>
+                <td>
+                    <input [(ngModel)]="custom.amount" [disabled]="authService?.user?.role === 'viewer'"
+                           type="number" min="0" (keyup)="checkCustomField( i )">
+                </td>
+                <td>
+                    {{ locked - unlock90 - customSum( custom ) | number:'1.0-2'}}
+                </td>
+                <td>
+                    {{ unlock90 + customSum( custom ) | number:'1.0-2'}}
+                </td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning remove-button" (click)="remove(i)">&mdash;</button>
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="5"></td>
+                <td>
+                    <button class="btn btn-sm btn-success add-button" (click)="add()">+</button>
+                </td>
+            </tr>
+            <tr *ngIf="totalLocked() > 0">
+                <td colspan="6">
+                    <div class="alert alert-warning">
+                        There's a locked amount of
+                        {{ totalLocked() | number:'1.0-2'}}
+                        without any specific unlock dates.
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="totalLocked() < 0">
+                <td colspan="6">
+                    <div class="alert alert-danger">
+                        Incorrect unlock amount. Please check the fields.
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -59,8 +125,8 @@
                  class="alert">
                 {{ message.text }}
             </div>
-            <button (click)="save()" [class.btn-disabled]="authService.status"
-                    [disabled]="authService.status"
+            <button (click)="save()" [class.btn-disabled]="authService.status || totalLocked() < 0"
+                    [disabled]="authService.status || totalLocked() < 0"
                     class="btn btn-lg btn-success"
                     style="width: 240px">
                 <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
