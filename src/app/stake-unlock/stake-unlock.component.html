@@ -11,7 +11,9 @@
                 <th></th>
             </tr>
             <tr>
-                <th></th>
+                <th>
+                    Mar 31 &mdash; Jun 29, 2021
+                </th>
                 <th>
                     0-89
                 </th>
@@ -28,13 +30,15 @@
                 <th></th>
             </tr>
             <tr>
-                <th></th>
+                <th>
+                    Jun 29 &mdash; Jul 12, 2021
+                </th>
                 <th>
                     90-103
                 </th>
                 <th>
                     <input [(ngModel)]="unlock90" [disabled]="authService?.user?.role === 'viewer'"
-                        type="number" min="0" (keyup)="checkUnlock90Field()">
+                           type="number" min="0" (keyup)="checkUnlock90Field()">
                 </th>
                 <th>
                     {{ locked - unlock90 | number:'1.0-2' }}
@@ -55,7 +59,9 @@
             <tbody *ngIf="expanded">
             <tr *ngFor="let unlockDate of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]"
                 [class.text-bold]="unlockDate === 14">
-                <td></td>
+                <td>
+                    {{ dateFromDay( 89 + unlockDate ) | date: 'medium':'UTC' }}
+                </td>
                 <td>
                     {{ 89 + unlockDate }}
                 </td>
@@ -73,25 +79,37 @@
             </tbody>
             <tbody>
             <tr class="text-bold" *ngFor="let custom of customUnlocks; let i = index">
-                <td>{{ custom.date | date: 'medium' }}</td>
-                <td>
-                    {{ getDaysSinceGenesis( custom.date ) }}
+                <td class="date-column">
+                    <mat-form-field>
+                        <input matInput [ngxMatDatetimePicker]="picker"
+                               [(ngModel)]="custom.date"
+                               (dateChange)="sortCustom()">
+
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+                        <ngx-mat-datetime-picker #picker [showSeconds]="false"
+                                                 [enableMeridian]="true"
+                                                 [disableMinute]="false" [hideTime]="false">
+                        </ngx-mat-datetime-picker>
+                    </mat-form-field>
+
                 </td>
-                <td>
+                <td class="pt-4">
+                    {{ getDaysSinceGenesis(custom.date) }}
+                </td>
+                <td class="pt-4">
                     <input [(ngModel)]="custom.amount" [disabled]="authService?.user?.role === 'viewer'"
                            type="number" min="0" (keyup)="checkCustomField( i )">
                 </td>
-                <td>
-                    {{ locked - unlock90 - customSum( custom ) | number:'1.0-2'}}
+                <td class="pt-4">
+                    {{ locked - unlock90 - customSum(custom) | number:'1.0-2'}}
                 </td>
-                <td>
-                    {{ unlock90 + customSum( custom ) | number:'1.0-2'}}
+                <td class="pt-4">
+                    {{ unlock90 + customSum(custom) | number:'1.0-2'}}
                 </td>
-
-                <td>
+                <td class="pt-4">
                     <button class="btn btn-sm btn-warning remove-button" (click)="remove(i)">&mdash;</button>
                 </td>
-
             </tr>
             <tr>
                 <td colspan="5"></td>
@@ -141,6 +159,7 @@
                 </small>
             </div>
         </div>
+
     </div>
 </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Message } from "../account/account.component";
 import { ApiClientService } from "../services/api-client.service";
 import { AuthService } from '../services/auth.service';
@@ -13,22 +13,10 @@ export class StakeUnlockComponent implements OnInit {
 
     // Initial Validators Weight
     public readonly locked = 3535670616;
-    public readonly genesisDate = moment( '2021-03-31T15:00:39.552Z' );
+    public readonly genesisDate = '2021-03-31T15:00:39.552Z';
 
     public unlock90 = 0;
-    public unlock365 = 0;
-
-    public customUnlocks = [
-        // {
-        //     date: '2022-03-13T15:50:12+07:00',
-        //     amount: 123,
-        // },
-        // {
-        //     date: '2022-02-13T15:50:12+07:00',
-        //     amount: 12334,
-        // }
-    ];
-
+    public customUnlocks = [];
     public message: Message;
     public isSaving = false;
     public expanded = false;
@@ -58,7 +46,7 @@ export class StakeUnlockComponent implements OnInit {
 
                     this.customUnlocks = custom.map( ( record: any ) => {
                         return {
-                            date: record.timestamp,
+                            date: moment( record.timestamp ).utc().format(),
                             amount: Math.round( record.amount / 1000000000 )
                         }
                     } );
@@ -75,10 +63,13 @@ export class StakeUnlockComponent implements OnInit {
 
     public add(): void {
         this.customUnlocks.push( {
-            date: moment().utc( true ).format(),
+            date: moment().utc().format(),
             amount: 0
         } );
-        this.sortCustom();
+    }
+
+    public dateFromDay( day: number ): string {
+        return moment( this.genesisDate ).add( day, 'days' ).utc().format();
     }
 
     public getDaysSinceGenesis( date: string ): number {
@@ -124,9 +115,6 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public save(): void {
-        console.log( this.customUnlocks );
-
-
         this.authService.status = true;
         this._apiClientService.post( 'validators-unlock', {
             unlock90: this.unlock90,
