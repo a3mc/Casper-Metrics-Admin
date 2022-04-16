@@ -12,6 +12,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     public circulatingSupply = 0;
     public totalSupply = 0;
     public validatorsWeight = 0;
+    private _eraInterval;
 
     constructor(
         private _apiClientService: ApiClientService,
@@ -19,6 +20,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this._getEra();
+        this._eraInterval = setInterval( () => {
+            this._getEra();
+        }, 10000 );
+
+        document.body.style.backgroundColor = '#dbd9ce';
+    }
+
+    ngOnDestroy(): void  {
+        document.body.style.backgroundColor = 'inherit';
+        clearInterval( this._eraInterval );
+    }
+
+    private _getEra(): void {
         this._apiClientService.get( 'era', null, true )
             .pipe( take( 1 ) )
             .subscribe( ( result: any ) => {
@@ -26,12 +41,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 this.totalSupply = result[0].totalSupply;
                 this.validatorsWeight = result[0].validatorsWeights;
             } );
-
-        document.body.style.backgroundColor = '#dbd9ce';
-    }
-
-    ngOnDestroy(): void  {
-        document.body.style.backgroundColor = 'inherit';
     }
 
 }

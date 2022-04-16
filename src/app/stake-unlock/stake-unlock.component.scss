@@ -11,6 +11,11 @@
 		button {
 			width: 120px;
 			text-align: center;
+			&.remove-button, &.add-button {
+				width: 30px;
+				font-weight: bold;
+				color: #fff;
+			}
 		}
 
 		button.btn-close {

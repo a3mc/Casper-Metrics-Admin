@@ -27,6 +27,14 @@ import { ActivateComponent } from './activate/activate.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { LogsComponent } from './logs/logs.component';
 import { SearchComponent } from './search/search.component';
+import { MatButtonModule } from "@angular/material/button";
+import {
+    NGX_MAT_DATE_FORMATS,
+    NgxMatDatetimePickerModule, NgxMatNativeDateModule,
+    NgxMatTimepickerModule
+} from "@angular-material-components/datetime-picker";
+import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from "@angular-material-components/moment-adapter";
+import { MAT_DATE_LOCALE } from "@angular/material/core";
 
 @NgModule( {
     declarations: [
@@ -52,6 +60,13 @@ import { SearchComponent } from './search/search.component';
         HttpClientModule,
         InterceptorModule,
         FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        NgxMatDatetimePickerModule,
+        NgxMatTimepickerModule,
+        MatDatepickerModule,
+        NgxMatNativeDateModule,
+        NgxMatMomentModule,
         JwtModule.forRoot( {
                 config: {
                     tokenGetter: () => {
@@ -72,6 +87,20 @@ import { SearchComponent } from './search/search.component';
     ],
     providers: [
         ApiClientService,
+        { provide: NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+        {
+            provide: NGX_MAT_DATE_FORMATS, useValue: {
+                parse: {
+                    dateInput: "MMM DD, YYYY, LT"
+                },
+                display: {
+                    dateInput: "MMM DD, YYYY, LT",
+                    monthYearLabel: "MMM YYYY",
+                    dateA11yLabel: "LL",
+                    monthYearA11yLabel: "MMMM YYYY"
+                },
+            }
+        },
     ],
     bootstrap: [AppComponent]
 } )

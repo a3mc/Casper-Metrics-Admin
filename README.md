@@ -1,27 +1,57 @@
 # AdminUi
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.6.
+This project is a front UI for https://caspermetrics.io It allows to adjust vesting schedule and perform search and mark transfers as adding to circulating supply.
+It's dedicated for a small group of administrtators and not available for public access.
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Prerequisites
 
-## Code scaffolding
+Make sure you use node 16+
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Installation and running
 
-## Build
+Run
+```sh
+npm install
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+To serve locally, run: 
 
-## Running unit tests
+```sh
+ng serve 
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+For building run: 
 
-## Running end-to-end tests
+```shell
+npm run build
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+You can use prod mode for deploying it for production use.
 
-## Further help
+## Other notes and API connection
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Please keep in mind that this UI is not designed for wide public use, although it's open source and you are welcome to submit any issues and suggestions you may find.
+
+Please see https://github.com/a3mc/Casper-Metrics repository of the main app for more details.
+
+## Documentation
+
+Most of the code is self-explanatory.
+And we are preparing a full documentation that will be released as a part of Milestone 3 of the project.
+
+## Contributing and Code of Conduct
+
+You are welcome to add your suggestions and to contribute to the project.
+Please create PRs against develop branch if you want to contribute.
+*We reserve the right to ignore or decline any PRs and not to respond to the messages.*
+
+Please follow the best practices, follow the code structure and make sure that your suggestion is really valuable for the project and well-formed.
+When you open an issue, please make sure you provide enough details on how to reproduce it.
+Don't use explicit lexis and be polite to other members.
+
+## License
+
+This project is licensed under MIT.
+
+
