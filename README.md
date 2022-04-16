@@ -1,8 +1,7 @@
 # AdminUi
 
-This project is a front UI for https://caspermetrics.io It allows to adjust vesting schedule and perform search and mark transfers as adding to circulating supply.
-It's dedicated for a small group of administrtators and not available for public access.
-
+This project is a front admin UI for https://admin.caspermetrics.io It allows to adjust vesting schedule and perform search and mark transfers as adding to circulating supply.
+It's dedicated for a small group of administrators and not available for public access.
 
 ## Prerequisites
 
