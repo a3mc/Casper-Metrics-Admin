@@ -4,7 +4,7 @@ Initial approach of this work is to calculate CSPR circulating supply. Although 
 
 This engine was built specifically for circulating supply calculation, however not limited and can become a foundation of new tools, for example, collecting and plotting employees salaries, donations and all sort of transactions flows for unlimited needs. The crawler builds a dependency tree connecting HEX addresses with accounts hashes. Users will be able to see connections between different inputs and represent this in a form of diagrams. Crawler is able to collect data very fast and provides user with a populated database for the future network analysis.
 
-##### Platform developed under [MIT license](https://github.com/a3mc/Casper-Metrics/blob/master/license.txt) and contains 3 core modules split between 3 repositories:
+##### Platform developed under [MIT license](https://github.com/a3mc/Casper-Metrics-Admin/blob/master/license.txt) and contains 3 core modules split between 3 repositories:
 
 1) [Casper-Metrics](https://github.com/a3mc/Casper-Metrics)
 
@@ -74,7 +74,7 @@ Please follow the best practices, follow the code structure and make sure that y
 
 ### License
 
-This project is licensed under [MIT license](https://github.com/a3mc/Casper-Metrics/blob/master/license.txt).
+This project is licensed under [MIT license](https://github.com/a3mc/Casper-Metrics-Admin/blob/master/license.txt).
 
 ### About us:
 * [ART3MIS.CLOUD](https://art3mis.cloud)
