@@ -122,6 +122,7 @@ export class StakeUnlockComponent implements OnInit {
         } )
             .subscribe(
                 () => {
+                    this.message = null;
                 },
                 ( error ) => {
                     this.message = {
