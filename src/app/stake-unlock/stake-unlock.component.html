@@ -120,9 +120,9 @@
             <tr *ngIf="totalLocked() > 0">
                 <td colspan="6">
                     <div class="alert alert-warning">
-                        There's a locked amount of
+                        There's an amount of
                         {{ totalLocked() | number:'1.0-2'}}
-                        without any specific unlock dates.
+                        CSPR locked at Genesis without any specific unlock dates.
                     </div>
                 </td>
             </tr>
@@ -135,6 +135,11 @@
             </tr>
             </tbody>
         </table>
+        <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
+            <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
+            Database update is performing in background. Saving and approval are temporarily not available.
+            <b>{{ 100 - authService.status }}%</b>
+        </div>
         <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 right">
             <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
@@ -143,21 +148,12 @@
                  class="alert">
                 {{ message.text }}
             </div>
-            <button (click)="save()" [class.btn-disabled]="authService.status || totalLocked() < 0"
-                    [disabled]="authService.status || totalLocked() < 0"
+            <button (click)="save()" [class.btn-disabled]="isSaving || authService.status || totalLocked() < 0"
+                    [disabled]="authService.status || isSaving || totalLocked() < 0"
                     class="btn btn-lg btn-success"
                     style="width: 240px">
-                <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
-
-                <span *ngIf="!authService.status">Approve&nbsp;&amp; Calculate</span>
-                <span *ngIf="authService.status">Deploying&hellip;</span>
+                Save
             </button>
-            <div class="mt-2 text-muted">
-                <small>
-                    This will trigger the update in database and will take a few minutes to finish.<br>
-                    After that, circulating supply will be updated on the API endpoints.<br>
-                </small>
-            </div>
         </div>
 
     </div>

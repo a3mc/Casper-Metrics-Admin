@@ -35,6 +35,7 @@ export class AuthComponent implements OnInit {
     public init() {
         const token = localStorage.getItem( 'access_token' );
         if ( token ) {
+            this.authService.checkingToken = true;
             this.authService.authByToken( token );
         }
         this._createUserForm();

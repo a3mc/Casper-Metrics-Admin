@@ -1,4 +1,5 @@
-<div *ngIf="!authService.isActivating && !authService.loggedIn" class="container-lg p-4">
+<div *ngIf="!authService.isActivating && !authService.loggedIn && !authService.checkingToken"
+     class="container-lg p-4">
     <app-auth></app-auth>
 </div>
 

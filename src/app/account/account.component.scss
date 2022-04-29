@@ -52,12 +52,22 @@ tr.active {
 }
 
 .sortable {
-	border-bottom: 1px dashed #999;
+	border-bottom: 1px dashed #339;
 	cursor: pointer;
 }
 
 .nav-item {
 	cursor: pointer;
+}
+
+.loading {
+	text-align: center;
+	padding-top: 50px;
+	padding-bottom: 200px;
+	i {
+		font-size: 96px;
+		color: #ccc;
+	}
 }
 
 .review {

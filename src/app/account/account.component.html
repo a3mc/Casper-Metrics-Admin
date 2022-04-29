@@ -2,10 +2,10 @@
     <app-tree (selectedNode)="selectNode( $event )" *ngIf="data && data.name" [data]="data"></app-tree>
 </div>
 
-<div *ngIf="showTable" class="card review p-5">
-    <button (click)="cancel()" *ngIf="tab !== 'approved'" aria-label="Close"
+<div *ngIf="showTable || overview" class="card review p-5">
+    <button (click)="cancel()" *ngIf="!overview" aria-label="Close"
             class="btn-close" type="button"></button>
-    <div *ngIf="tab !== 'approved'" class="card-title">
+    <div *ngIf="!overview" class="card-title">
         <h3 class="mb-4">
             Review Transactions
             ({{
@@ -41,7 +41,7 @@
         </ul>
     </div>
     <div class="card-body">
-        <div *ngIf="tab !== 'approved'" class="review-details mb-3">
+        <div *ngIf="!overview" class="review-details mb-3">
             <div *ngIf="tab === 'previous'">
                 <div>
                     <span class="from">From:</span>&nbsp;
@@ -114,8 +114,11 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="!transfers?.length" class="alert alert-warning">
+        <div *ngIf="!transfers?.length && !overview || (overview && transfersLoaded && !transfers.length)" class="alert alert-warning">
             No transactions found.
+        </div>
+        <div *ngIf="overview && !transfersLoaded && !transfers.length" class="loading">
+            <i aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
         </div>
         <table *ngIf="transfers?.length" class="table">
             <thead>
@@ -133,8 +136,8 @@
                 </th>
                 <th scope="col">Date</th>
                 <th scope="col">Deploy Hash</th>
-                <th *ngIf="tab === 'inbound' || tab === 'approved'" scope="col">From</th>
-                <th *ngIf="tab === 'outbound' || tab === 'approved'" scope="col">To</th>
+                <th *ngIf="tab === 'inbound' || overview" scope="col">From</th>
+                <th *ngIf="tab === 'outbound' || overview" scope="col">To</th>
                 <th class="amount-cell right" scope="col">
                     <a (click)="changeSort( 'denomAmount' )">
                         <span class="sortable me-1">Amount</span>
@@ -161,7 +164,7 @@
                     <i (cbOnSuccess)="copied($event)" cbContent="{{ transfer.deployHash }}" class="far fa-clipboard"
                        ngxClipboard></i>
                 </td>
-                <td *ngIf="tab === 'inbound' || tab === 'approved'">
+                <td *ngIf="tab === 'inbound' || overview">
                         <span *ngIf="transfer.from">
                             {{ transfer.from.substr(0, 8) + '&hellip;' + transfer.from.substr(-8, 8) }}
                         </span>
@@ -173,7 +176,7 @@
                        class="far fa-clipboard"
                        ngxClipboard></i>
                 </td>
-                <td *ngIf="tab === 'outbound' || tab === 'approved'">
+                <td *ngIf="tab === 'outbound' || overview">
                          <span *ngIf="transfer.to">
                             {{ transfer.to.substr(0, 8) + '&hellip;' + transfer.to.substr(-8, 8) }}
                          </span>
@@ -190,15 +193,15 @@
             </tr>
             </tbody>
             <tfoot class="total">
-            <tr *ngIf="tab !== 'approved'">
-                <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
+            <tr *ngIf="!overview">
+                <td [attr.colspan]="tab === 'previous' ? 4 : overview ? 6 : 5" class="right">
                     Total (CSPR):
                 </td>
                 <td class="right">{{ (tab !== 'previous' ? allTransferSum : transfersSum) | number:'1.0-0' }}</td>
             </tr>
             <tr>
 
-                <td [attr.colspan]="tab === 'previous' ? 4 : tab === 'approved' ? 6 : 5" class="right">
+                <td [attr.colspan]="tab === 'previous' ? 4 : overview ? 6 : 5" class="right">
                     Include in Circulating Supply (CSPR):
                 </td>
                 <td class="right">
@@ -236,7 +239,7 @@
             </div>
         </div>
 
-        <div *ngIf="authService?.user?.role !== 'viewer'" class="pt-4 row">
+        <div *ngIf="authService?.user?.role !== 'viewer' && (!overview || transfersLoaded )" class="pt-4 row">
             <div *ngIf="message" [class.alert-danger]="message.type === 'error'"
                  [class.alert-info]="!message.type"
                  [class.alert-success]="message.type === 'success'"
@@ -244,16 +247,33 @@
                  class="alert">
                 {{ message.text }}
             </div>
-            <div *ngIf="authService.status && (tab !== 'approved')" class="alert alert-warning">
-                Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
+
+            <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
+                <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
+                Database update is performing in background. Saving and approval are temporarily not available.
+                <b>{{ 100 - authService.status }}%</b>
             </div>
+
             <div class="col pt-4">
-                <button (click)="saveAll()" *ngIf="tab !== 'previous' && tab !== 'approved'"
-                        [class.btn-disabled]="isSaving || authService.status"
-                        [disabled]="isSaving || authService.status"
-                        class="btn btn-lg btn-success mt-3" style="width: 250px">
-                    Save All {{ tab | titlecase }} TXs
-                </button>
+                <div *ngIf="tab !== 'previous' && tab !== 'approved'">
+                    <button (click)="saveAll()"
+                            [class.btn-disabled]="isSaving || authService.status"
+                            [disabled]="isSaving || authService.status"
+                            class="btn btn-lg btn-success mt-3" style="width: 250px">
+                        Save All {{ tab | titlecase }} TXs
+                    </button>
+                    <div class="approve-type mt-2">
+                        As:
+                        <label class="me-2 ms-2">
+                            <input type="radio" name="saveAllType" value="1" [(ngModel)]="approveType">
+                            Approved
+                        </label>
+                        <label>
+                            <input type="radio" name="saveAllType" value="0" [(ngModel)]="approveType">
+                            Not Approved
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="col pt-4">
                 <div class="pt-4 right">
@@ -270,17 +290,14 @@
                 </div>
             </div>
 
-            <button (click)="calculate()" *ngIf="tab === 'approved'"
+            <button (click)="calculate()" *ngIf="overview"
                     [class.btn-disabled]="authService.status"
                     [disabled]="authService.status"
                     class="btn btn-lg btn-success"
                     style="width:250px;">
-                <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
-
-                <span *ngIf="!authService.status">Approve&nbsp;&amp; Calculate</span>
-                <span *ngIf="authService.status">Deploying&hellip;</span>
+                <span>Approve&nbsp;&amp; Calculate</span>
             </button>
-            <div *ngIf="tab === 'approved'" class="mt-2 text-muted right">
+            <div *ngIf="overview" class="mt-2 text-muted right">
                 <small>
                     This will trigger the update in database and will take a few minutes to finish.<br>
                     After that, circulating supply will be updated on the API endpoints.<br>

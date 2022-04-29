@@ -14,7 +14,8 @@ export class AuthService {
     public isActivating = false;
     public errorMessage: string;
     public user: any;
-    public status = false;
+    public status = 0;
+    public checkingToken = false;
     private _authTimer: number;
 
     constructor(
@@ -23,7 +24,7 @@ export class AuthService {
     ) {
         setInterval( () => {
             this.checkStatus();
-        }, 5000 );
+        }, 2000 );
     }
 
     public checkStatus(): void {
@@ -34,8 +35,8 @@ export class AuthService {
             'transfers/status',
         ).pipe( take( 1 ) )
             .subscribe(
-                result => {
-                    this.status = !!result;
+                ( result: any ) => {
+                    this.status = result;
                 }
             );
     }
@@ -66,6 +67,7 @@ export class AuthService {
                     this.user = result;
                     this._recheckAuth();
                     this.checkStatus();
+                    this.checkingToken = false;
                 },
                 error => {
                     if (
@@ -79,7 +81,9 @@ export class AuthService {
                         if ( !error?.error?.error?.message.match( /expired/ ) ) {
                             this.errorMessage = error?.error?.error?.message || 'Error!';
                         }
+                        this.signOut();
                     }
+                    this.checkingToken = false;
                     console.error( error );
                 }
             );
@@ -128,7 +132,7 @@ export class AuthService {
                 () => {
                     this.authByToken( AuthService.access_token );
                 },
-                30000
+                15000
             )
         }
 
