@@ -81,7 +81,6 @@ export class AuthService {
                         if ( !error?.error?.error?.message.match( /expired/ ) ) {
                             this.errorMessage = error?.error?.error?.message || 'Error!';
                         }
-                        this.signOut();
                     }
                     this.checkingToken = false;
                     console.error( error );
@@ -132,7 +131,6 @@ export class AuthService {
                 () => {
                     this.authByToken( AuthService.access_token );
                 },
-                15000
             )
         }
 
