@@ -49,6 +49,8 @@ export class AccountComponent implements OnInit {
     public allTransferSum = 0;
     public sortColumn = 'blockHeight';
     public sortOrder = 'DESC';
+    public transfersLoaded = false;
+    public approveType = '1';
 
     private _connectedTransactions;
 
@@ -124,6 +126,7 @@ export class AccountComponent implements OnInit {
     }
 
     public approvedTransfers() {
+        this.transfersLoaded = false;
         this._apiClientService.get(
             'transfers?approved=1' + '&perPage=' + this.perPage + '&page=' + this.page +
             '&sort=' + this.sortColumn + ' ' + this.sortOrder
@@ -134,13 +137,14 @@ export class AccountComponent implements OnInit {
                 this.totalApproved = result.approvedSum;
                 this.allTransfers = result.data;
                 this.allTransferSum = result.totalSum;
-                this.editTransfers( this.allTransfers, 'approved' )
+                this.editTransfers( this.allTransfers, 'approved' );
+                this.transfersLoaded = true;
             } );
 
     }
 
     public calculate(): void {
-        this.authService.status = true;
+        this.authService.status = 100;
         this._apiClientService.post( 'transfers/calculate', null )
             .pipe( take( 1 ) )
             .subscribe(
@@ -342,7 +346,7 @@ export class AccountComponent implements OnInit {
                         type: 'success',
                         text: 'Saved successfully. Use "Approval" tab to deploy changes.',
                     }
-                    this.isSaving = false;
+                    setTimeout( () => { this.isSaving = false; } , 2000 );
                     this.transfers.forEach( transfer => {
                         transfer.approved = transfer.selected;
                     } );
@@ -366,13 +370,19 @@ export class AccountComponent implements OnInit {
             return;
         }
 
-        this.transfers.forEach( transfer => transfer.selected = true );
-        this.allSelected = true;
+        if ( this.totalItems > 100 ) {
+            this.authService.status = 100;
+        }
+
+        this.transfers.forEach( transfer => transfer.selected = !!Number( this.approveType ) );
+        this.allSelected = !!Number( this.approveType );
 
         this.isSaving = true;
         const hash = this.tab === 'inbound' ? this.transfers[0].toHash : this.transfers[0].fromHash;
 
-        this._apiClientService.post( 'transfers/approve?' + this.tab + '=' + hash, {} )
+        this._apiClientService.post(
+            'transfers/approve?' + this.tab + '=' + hash + '&type=' + this.approveType, {}
+        )
             .pipe( take( 1 ) )
             .subscribe(
                 ( result ) => {
@@ -380,7 +390,7 @@ export class AccountComponent implements OnInit {
                         type: 'success',
                         text: 'Saved successfully. Use "Approval" tab to deploy changes.',
                     }
-                    this.isSaving = false;
+                    setTimeout( () => { this.isSaving = false; } , 2000 );
                 },
                 ( error ) => {
                     this.message = {
@@ -396,6 +406,7 @@ export class AccountComponent implements OnInit {
         this.transfers = [];
         this.showTable = false;
         this.unselectNode();
+        this.isSaving = false;
     }
 
     public changeSort( column: string ): void {

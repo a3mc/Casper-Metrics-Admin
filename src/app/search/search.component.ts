@@ -25,6 +25,9 @@ export class SearchComponent implements OnInit {
     public isSaving = false;
     public sortColumn = 'blockHeight';
     public sortOrder = 'DESC';
+    public approveType = '1';
+    public accountName = '';
+    public accountComment = '';
 
     constructor(
         public authService: AuthService,
@@ -33,6 +36,8 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.message = null;
+        this.approveType = '1';
     }
 
     public searchChanged(): void {
@@ -151,10 +156,10 @@ export class SearchComponent implements OnInit {
                 this._reduceApprovedSum();
                 this.checkSelected();
             }, error => {
-            console.warn( error );
+                console.warn( error );
                 this.searchPerformed = true;
-            this.transfers = [];
-        } );
+                this.transfers = [];
+            } );
     }
 
     public selectAll(): void {
@@ -174,7 +179,7 @@ export class SearchComponent implements OnInit {
     }
 
     public checkSelected(): void {
-        this.allSelected = !! this.transfers.every( transfer => transfer.approved );
+        this.allSelected = !!this.transfers.every( transfer => transfer.approved );
     }
 
     public perPageChanged(): void {
@@ -232,7 +237,9 @@ export class SearchComponent implements OnInit {
                         type: 'success',
                         text: 'Saved successfully. Use "Approval" tab to deploy changes.',
                     }
-                    this.isSaving = false;
+                    setTimeout( () => {
+                        this.isSaving = false;
+                    }, 2000 );
                 },
                 ( error ) => {
                     this.message = {
@@ -244,18 +251,43 @@ export class SearchComponent implements OnInit {
                 } );
     }
 
+    public saveName(): void {
+        this._apiClientService.post(
+            'transfers/name', {
+                hash: this.searchTerm.trim(),
+                name: this.accountName.trim(),
+                comment: this.accountComment.trim()
+            }
+        )
+            .pipe( take( 1 ) )
+            .subscribe(
+                ( result ) => {
+                    console.log( 'saved ');
+                },
+                ( error ) => {
+                    console.error( error );
+                } );
+    }
+
     public saveAll(): void {
+        if ( this.totalItems > 100 ) {
+            this.authService.status = 100;
+        }
+
         if ( this.tab !== 'inbound' && this.tab !== 'outbound' ) {
             console.error( 'Incorrect tab trying to save all' );
             return;
         }
 
-        this.transfers.forEach( transfer => transfer.approved = true );
+        this.transfers.forEach( transfer => transfer.approved = !!Number( this.approveType ) );
+        this.allSelected = !!Number( this.approveType );
 
         this.isSaving = true;
         const hash = this.tab === 'inbound' ? this.transfers[0].toHash : this.transfers[0].fromHash;
 
-        this._apiClientService.post( 'transfers/approve?' + this.tab + '=' + hash, {} )
+        this._apiClientService.post(
+            'transfers/approve?' + this.tab + '=' + hash + '&type=' + this.approveType, {}
+        )
             .pipe( take( 1 ) )
             .subscribe(
                 ( result ) => {
@@ -263,7 +295,9 @@ export class SearchComponent implements OnInit {
                         type: 'success',
                         text: 'Saved successfully. Use "Approval" tab to deploy changes.',
                     }
-                    this.isSaving = false;
+                    setTimeout( () => {
+                        this.isSaving = false;
+                    }, 2000 );
                 },
                 ( error ) => {
                     this.message = {
@@ -291,6 +325,10 @@ export class SearchComponent implements OnInit {
         this.transfers = [];
         this.page = 1;
         this.totalItems = 0;
+        this.message = null;
+        this.approveType = '1';
+        this.accountName = '';
+        this.accountComment = '';
     }
 
 }

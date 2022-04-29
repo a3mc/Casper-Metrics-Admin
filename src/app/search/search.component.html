@@ -14,6 +14,16 @@
         </button>
     </div>
 
+<!--    <div class="card ps-5 pe-5 pt-3 pb-3 mt-3 mb-0" *ngIf="searchPerformed">-->
+<!--        <label>Name:</label>-->
+<!--        <input class="form-control" name="accountName" [(ngModel)]="accountName">-->
+
+<!--        <label>Comment:</label>-->
+<!--        <input class="form-control" name="accountComment" [(ngModel)]="accountComment">-->
+
+<!--        <button class="btn btn-success mt-3" style="width:150px;" (click)="saveName()">Save</button>-->
+<!--    </div>-->
+
     <div class="card review p-5" *ngIf="searchPerformed">
         <div class="card-title">
             <h3 class="mb-4">
@@ -168,7 +178,9 @@
                 {{ message.text }}
             </div>
             <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
-                Deploying approved TXs is in progress. Saving is disabled. Please try again in couple of minutes.
+                <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
+                Database update is performing in background. Saving and approval are temporarily not available.
+                <b>{{ 100 - authService.status }}%</b>
             </div>
 
             <div class="col">
@@ -179,6 +191,17 @@
                             class="btn btn-lg btn-success">
                         Save All {{ tab | titlecase }} TXs
                     </button>
+                    <div class="approve-type mt-2">
+                        As:
+                        <label class="me-2 ms-2">
+                            <input type="radio" name="saveAllType" value="1" [(ngModel)]="approveType">
+                            Approved
+                        </label>
+                        <label>
+                            <input type="radio" name="saveAllType" value="0" [(ngModel)]="approveType">
+                            Not Approved
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="col">

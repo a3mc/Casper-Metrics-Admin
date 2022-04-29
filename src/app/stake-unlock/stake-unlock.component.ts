@@ -57,11 +57,13 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public remove( i: number ): void {
+        this.message = null;
         this.customUnlocks.splice( i, 1 );
         this.sortCustom();
     }
 
     public add(): void {
+        this.message = null;
         this.customUnlocks.push( {
             date: moment().utc().format(),
             amount: 0
@@ -83,12 +85,14 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public checkUnlock90Field(): void {
+        this.message = null;
         if ( this.unlock90 < 0 ) {
             this.unlock90 = 0;
         }
     }
 
     public checkCustomField( i: number ): void {
+        this.message = null;
         if ( this.customUnlocks[i].amount < 0 ) {
             this.customUnlocks[i].amount = 0;
         }
@@ -115,20 +119,26 @@ export class StakeUnlockComponent implements OnInit {
     }
 
     public save(): void {
-        this.authService.status = true;
+        this.message = null;
+        this.isSaving = true;
         this._apiClientService.post( 'validators-unlock', {
             unlock90: this.unlock90,
             custom: this.customUnlocks
         } )
             .subscribe(
                 () => {
-                    this.message = null;
+                    this.message = {
+                        type: 'success',
+                        text: 'Unlock schedule was updated. Click "Approve & Calculate" on the "Approval" tab to make the changes public.'
+                    };
+                    this.isSaving = false;
                 },
                 ( error ) => {
                     this.message = {
                         type: 'error',
                         text: 'Error updating unlocked validators schedule.'
                     }
+                    this.isSaving = false;
                     console.log( error );
                 }
             );
