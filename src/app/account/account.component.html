@@ -248,9 +248,9 @@
                 {{ message.text }}
             </div>
 
-            <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
+            <div *ngIf="authService.status && authService?.user?.role !== 'viewer' && !overview" class="alert alert-warning">
                 <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
-                Database update is performing in background. Saving and approval are temporarily not available.
+                Database update is performing in background. Saving is temporarily unavailable.
                 <b>{{ 100 - authService.status }}%</b>
             </div>
 
@@ -288,23 +288,6 @@
                         Save&nbsp;Selected
                     </button>
                 </div>
-            </div>
-
-            <button (click)="calculate()" *ngIf="overview"
-                    [class.btn-disabled]="authService.status"
-                    [disabled]="authService.status"
-                    class="btn btn-lg btn-success"
-                    style="width:250px;">
-                <span>Approve&nbsp;&amp; Calculate</span>
-            </button>
-            <div *ngIf="overview" class="mt-2 text-muted right">
-                <small>
-                    This will trigger the update in database and will take a few minutes to finish.<br>
-                    After that, circulating supply will be updated on the API endpoints.<br>
-                    <span *ngIf="totalItems > perPage">
-                        Please note, it affects all pages, not just the current one.
-                    </span>
-                </small>
             </div>
 
         </div>

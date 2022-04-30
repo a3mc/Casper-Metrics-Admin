@@ -1,4 +1,4 @@
-<div *ngIf="!authService.isActivating && !authService.loggedIn && !authService.checkingToken"
+<div *ngIf="!authService.isActivating && !authService.loggedIn" [hidden]="authService.checkingToken"
      class="container-lg p-4">
     <app-auth></app-auth>
 </div>
@@ -41,8 +41,8 @@
             <li class="nav-item me-4">
                 <a [routerLinkActiveOptions]="{ exact: true }" class="nav-link" routerLink="/"
                    routerLinkActive="active">
-                    <i class="fas fa-stamp"></i>
-                    <b> Approval</b>
+                    <i class="fas fa-eye"></i>
+                    <b> Overview</b>
                 </a>
             </li>
             <li class="nav-item">

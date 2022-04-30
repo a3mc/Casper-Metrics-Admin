@@ -179,7 +179,7 @@
             </div>
             <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning">
                 <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
-                Database update is performing in background. Saving and approval are temporarily not available.
+                Database update is performing in background. Saving is temporarily unavailable.
                 <b>{{ 100 - authService.status }}%</b>
             </div>
 

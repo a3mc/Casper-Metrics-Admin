@@ -32,7 +32,7 @@
                     </td>
                     <td>{{ log.action }}</td>
                     <td>
-                        <a (click)="showDetails( log, i )" class="btn b btn-link">Details</a>
+                        <a *ngIf="log.action.indexOf( 'Saved' ) >-1" (click)="showDetails( log, i )" class="btn b btn-link">Details</a>
                     </td>
                 </tr>
                 <tr *ngIf="log.extra">

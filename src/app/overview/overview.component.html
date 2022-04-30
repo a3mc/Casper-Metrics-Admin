@@ -1,18 +1,51 @@
 <div class="overview">
     <div class="metrics">
         <div class="pt-3">
-            Current Circulating Supply: <b>{{ circulatingSupply | number:'1.0-2' }}</b>
+            Last completed Era Circulating Supply: <b>{{ circulatingSupply | number:'1.0-2' }}</b>
         </div>
         <div class="mt-2 text-muted text-small">
             It includes approved transactions, unlocked stake and related Validators rewards.
         </div>
     </div>
-    <div class="mt-5 approve-card">
-        <h4 class="approved-header">Approve Unlocked Transfers and Stake Unlock Schedule</h4>
+    <div class="card mt-3 mb-4 p-5">
+        <div class="mt-2">
+            After you make necessary changes to the Transfers or Staked Validators Schedule, please
+            trigger the "Update Historical Data" process, which will update each Era with the new calculated values.
+            <br><br>
+            It will take a few minutes to finish. Please keep in mind there's also a 10 minutes cache on some
+            endpoints of the Front API, so there can be some delay before it's fully updated there.
+            You can review the values to be applied in the sections below.
+            <br><br>
+        </div>
+        <button (click)="calculate()"
+                [class.btn-disabled]="authService.status"
+                [disabled]="authService.status"
+                class="btn btn-lg btn-success"
+                style="width:250px;">
+            <span>Update Historical Data</span>
+        </button>
 
-        <small class="text-muted">You can edit and verify Stake Unlock Schedule
-            <a routerLink="/stake-unlock">here</a>
-        </small>
+        <div *ngIf="authService.status && authService?.user?.role !== 'viewer'" class="alert alert-warning mt-3">
+            <i *ngIf="authService.status" aria-hidden="true" class="fa fa-spinner fa-spin me-2"></i>
+            Database update is performing in background. Saving is temporarily unavailable.
+            <b>{{ 100 - authService.status }}%</b>
+        </div>
+    </div>
+    <div class="mt-5 approve-card">
+            <h4>Total Unlocked Genesis Validators</h4>
+            <div><b>{{ totalStakeUnlock | number: '1.0-0'}} CSPR</b></div>
+            <small class="text-muted">You can edit and verify
+                <a routerLink="/stake-unlock">Stake Unlock</a> Schedule
+            </small>
+
+            <div class="approved-header">
+                <h4 class="mt-5">Approved Unlocked Transfers</h4>
+                <small class="text-muted">Each transfer adds to Circulating Supply amount on its date.
+                    You can use <a routerLink="/search">Search</a> or browse through the transfers that started from
+                    the Genesis vaults to make changes.
+                </small>
+            </div>
+
         <app-account [overview]="true"></app-account>
     </div>
 </div>

@@ -235,7 +235,7 @@ export class SearchComponent implements OnInit {
                 ( result ) => {
                     this.message = {
                         type: 'success',
-                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
+                        text: 'Saved successfully. Use "Overview" tab to update historical data.',
                     }
                     setTimeout( () => {
                         this.isSaving = false;
@@ -293,7 +293,7 @@ export class SearchComponent implements OnInit {
                 ( result ) => {
                     this.message = {
                         type: 'success',
-                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
+                        text: 'Saved successfully. Use "Overview" tab to update historical data.',
                     }
                     setTimeout( () => {
                         this.isSaving = false;

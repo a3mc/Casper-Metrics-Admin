@@ -129,7 +129,7 @@ export class StakeUnlockComponent implements OnInit {
                 () => {
                     this.message = {
                         type: 'success',
-                        text: 'Unlock schedule was updated. Click "Approve & Calculate" on the "Approval" tab to make the changes public.'
+                        text: 'Saved successfully. Use "Overview" tab to update historical data.'
                     };
                     this.isSaving = false;
                 },
