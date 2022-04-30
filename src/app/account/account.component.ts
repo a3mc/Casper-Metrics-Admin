@@ -143,19 +143,6 @@ export class AccountComponent implements OnInit {
 
     }
 
-    public calculate(): void {
-        this.authService.status = 100;
-        this._apiClientService.post( 'transfers/calculate', null )
-            .pipe( take( 1 ) )
-            .subscribe(
-                () => {
-                },
-                ( error: any ) => {
-                    console.error( error );
-                }
-            );
-    }
-
     public selectNode( nodePair ): void {
         if ( !nodePair[0] || !nodePair[1] ) return;
         this.totalItems = 0;
@@ -344,7 +331,7 @@ export class AccountComponent implements OnInit {
                 ( result ) => {
                     this.message = {
                         type: 'success',
-                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
+                        text: 'Saved successfully. Use "Overview" tab to update historical data.',
                     }
                     setTimeout( () => { this.isSaving = false; } , 2000 );
                     this.transfers.forEach( transfer => {
@@ -388,7 +375,7 @@ export class AccountComponent implements OnInit {
                 ( result ) => {
                     this.message = {
                         type: 'success',
-                        text: 'Saved successfully. Use "Approval" tab to deploy changes.',
+                        text: 'Saved successfully. Use "Overview" tab to update historical data.',
                     }
                     setTimeout( () => { this.isSaving = false; } , 2000 );
                 },

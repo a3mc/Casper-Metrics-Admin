@@ -62,14 +62,13 @@ export class AuthService {
                         );
                         return;
                     }
-
+                    this.checkingToken = false;
                     this.loggedIn = true;
                     this.user = result;
                     this._recheckAuth();
-                    this.checkStatus();
-                    this.checkingToken = false;
                 },
                 error => {
+                    this.checkingToken = false;
                     if (
                         error.status &&
                         error.status >= 400 && error.status < 500
@@ -81,8 +80,9 @@ export class AuthService {
                         if ( !error?.error?.error?.message.match( /expired/ ) ) {
                             this.errorMessage = error?.error?.error?.message || 'Error!';
                         }
+                    } else {
+                        this._recheckAuth();
                     }
-                    this.checkingToken = false;
                     console.error( error );
                 }
             );
@@ -130,7 +130,7 @@ export class AuthService {
             this._authTimer = setTimeout(
                 () => {
                     this.authByToken( AuthService.access_token );
-                },
+                }, 15000
             )
         }
 
