@@ -7,7 +7,7 @@
             It includes approved transactions, unlocked stake and related Validators rewards.
         </div>
     </div>
-    <div class="card mt-3 mb-4 p-5">
+    <div class="card mt-3 mb-4 p-5" *ngIf="authService?.user?.role !== 'viewer'">
         <div class="mt-2">
             After you make necessary changes to the Transfers or Staked Validators Schedule, please
             trigger the "Update Historical Data" process, which will update each Era with the new calculated values.
